@@ -1,0 +1,176 @@
+{% extends "layout_admin.html.twig" %}
+{% set item = "deals" %}
+
+{% block title %}Deals{% endblock %}
+
+{% block stylesheet %}
+    <link rel="stylesheet" type="text/css" href="{{ asset('css/bootstrap-switch.css') }}" />
+    <link rel="stylesheet" media="all" type="text/css" href="{{ asset('css/jquery-ui-timepicker-addon.min.css') }}" />
+{% endblock %}
+
+{% block breadcrumb %}
+    <li><a href="{{ path('app_admin_index') }}">Administration</a></li>
+    <li class="active">Deals</li>
+    {% endblock %}
+
+{% block contenu %}
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="well well-ws-inc">
+                <legend><i class="fa fa-list" aria-hidden="true"></i> Liste Deals</legend>
+                {% if pagination|length > 0 %}
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Id</th>
+                                    <th>Titre</th>
+                                    <th>Activé</th>
+                                    <th>Redirection</th>
+                                    <th>Nouvel onglet</th>
+                                    <th>Date début</th>
+                                    <th>Date fin</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for deal in pagination %}
+                                    <tr>
+                                        <td>{{ deal.id }}</td>
+                                        <td>{{ deal.titre }}</td>
+                                        <td>{% if deal.active %} <span class="label label-success">Oui</span> {% else %} <span class="label label-danger">Non</span> {% endif %}</td>
+                                        <td>{{ deal.redirection }}</td>
+                                        <td>{% if deal.newTab %} <span class="label label-success">Oui</span> {% else %} <span class="label label-danger">Non</span> {% endif %}</td>
+                                        <td>{{ deal.dateDebut|date('d/m/Y - H:i') }}</td>
+                                        <td>{{ deal.dateFin|date('d/m/Y - H:i') }}</td>
+                                        <td><a class="btn btn-sm btn-primary pull-right" href="{{ path('app_admin_deals_edit',{'id':deal.id}) }}" style="margin: 5px;"><i class="fa fa-pencil-square-o" title="Modifier" ></i></a><a style="margin: 5px;" class="btn btn-sm btn-danger pull-right" href="{{ path('app_admin_deals_remove',{'id':deal.id}) }}"><i title="Supprimer" class="fa fa-trash-o" aria-h_editidden="true"></i></a></td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>                   
+                {% else %}
+                    <div class="alert alert-info">
+                        <p><strong>Aucun deal enregistré.</strong>Veuillez utiliser le formulaire d'ajout pour enregistrer des nouveaux deals.</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="well well-ws-inc">
+                <legend><i class="fa fa-plus-square" aria-hidden="true"></i> Nouveau Deal</legend>
+                {{ form_start(formDeal,{'attr':{'class':'form-horizontal','enctype':'multipart/form-data','method':'POST','data-parsley-validate':''}}) }}
+                {{ form_errors(formDeal) }}
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            {{ form_label(formDeal.titre, "Titre : ", {'label_attr': {'class': 'col-sm-3 control-label'}}) }}
+                            <div class="col-sm-9">
+                                {{ form_widget(formDeal.titre, {'attr': {'class': 'form-control'}}) }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            {{ form_label(formDeal.description, "Déscription : ", {'label_attr': {'class': 'col-sm-3 control-label'}}) }}
+                            <div class="col-sm-9">
+                                {{ form_widget(formDeal.description, {'attr': {'class': 'form-control'}}) }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            {{ form_label(formDeal.categorie, "Catégorie : ", {'label_attr': {'class': 'col-sm-3 control-label'}}) }}
+                            <div class="col-sm-9">
+                                {{ form_widget(formDeal.categorie, {'attr': {'class': 'form-control'}}) }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            {{ form_label(formDeal.produit, "Produit : ", {'label_attr': {'class': 'col-sm-3 control-label'}}) }}
+                            <div class="col-sm-9">
+                                {{ form_widget(formDeal.produit, {'attr': {'class': 'form-control'}}) }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            {{ form_label(formDeal.lien, "Lien : ", {'label_attr': {'class': 'col-sm-3 control-label'}}) }}
+                            <div class="col-sm-9">
+                                {{ form_widget(formDeal.lien, {'attr': {'class': 'form-control'}}) }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            {{ form_label(formDeal.newTab, "Nouvel onglet : ", {'label_attr': {'class': 'col-sm-3 control-label'}}) }}
+                            <div style="margin-top: 5px;" class="col-sm-9">
+                                {{ form_widget(formDeal.newTab, {'attr': {'data-on-text': 'Oui','data-off-text': 'Non','class':'switch'}}) }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            {{ form_label(formDeal.dateDebut, "Date Début : ", {'label_attr': {'class': 'col-sm-3 control-label'}}) }}
+                            <div class="col-sm-9">
+                                {{ form_widget(formDeal.dateDebut, {'attr': {'class': 'form-control'}}) }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            {{ form_label(formDeal.dateFin, "Date Fin : ", {'label_attr': {'class': 'col-sm-3 control-label'}}) }}
+                            <div class="col-sm-9">
+                                {{ form_widget(formDeal.dateFin, {'attr': {'class': 'form-control'}}) }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            {{ form_label(formDeal.active, "Activé : ", {'label_attr': {'class': 'col-sm-3 control-label'}}) }}
+                            <div style="margin-top: 5px;" class="col-sm-9">
+                                {{ form_widget(formDeal.active, {'attr': {'data-on-text': 'Oui','data-off-text': 'Non','class':'switch'}}) }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            {{ form_label(formDeal.image, "Image : ", {'label_attr': {'class': 'col-sm-3 control-label'}}) }}
+                            <div class="col-sm-9">
+                                <button class="btn btn-primary btn-sm" id="bind_img">Veuillez choisir une photo <i class='fa fa-paperclip'></i></button>
+                                {{ form_widget(formDeal.image, {'attr': {'style':'display: none;'}}) }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <button class="btn btn-primary btn-sm pull-right" type="submit"><i class="fa fa-plus-square" aria-hidden="true"></i> Ajouter</button>
+                </div>
+                {{ form_rest(formDeal) }}
+                {{ form_end(formDeal) }}
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascript %}
+    <script type="text/javascript" src="{{ asset('js/bootstrap-switch.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/jquery-ui-timepicker-addon.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/jquery-ui-timepicker-fr.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/jquery-ui-sliderAccess.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/deals.js') }}"></script>
+{% endblock %}

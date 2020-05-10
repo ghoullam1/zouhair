@@ -1,0 +1,42 @@
+# app/config/security.yml
+
+security:
+    encoders:
+        AppBundle\Entity\Client: bcrypt
+
+    role_hierarchy:
+        ROLE_ADMIN: [ROLE_USER]
+        ROLE_SUPER_ADMIN: [ROLE_ADMIN, ROLE_ALLOWED_TO_SWITCH]
+
+    providers:
+        main:
+            entity:
+                class: AppBundle\Entity\Client
+                property: email
+
+    firewalls:
+        dev:
+            pattern: ^/(_(profiler|wdt)|css|images|js)/
+            security: false
+        main:
+            pattern: ^/
+            anonymous: true
+            provider: main
+            entry_point: app.entry_point.user_login
+            form_login:
+                login_path: login
+                check_path: security_check_route
+                success_handler: app.security.authentication_handler
+                failure_handler: app.security.authentication_handler
+                require_previous_session: false
+            logout:
+                path: logout
+                success_handler: app.security.authentication_handler
+
+    access_control:
+        - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/compte, roles: ROLE_USER }
+        - { path: ^/panier/coupon, roles: ROLE_USER }
+        - { path: ^/panier/modeLivraison, roles: ROLE_USER }
+        - { path: ^/checkout, roles: ROLE_USER }
+        - { path: ^/administration, roles: ROLE_ADMIN}

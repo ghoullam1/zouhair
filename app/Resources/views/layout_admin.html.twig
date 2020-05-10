@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <title>Administration - {% block title %}{% endblock %}</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" type="text/css" href="{{ asset('css/jquery-ui.min.css') }}" />
+        <link rel="stylesheet" type="text/css" href="{{ asset('css/bootstrap.css') }}" />
+        <link rel="stylesheet" type="text/css" href="{{ asset('css/font-awesome.min.css') }}" />
+        <link rel="stylesheet" type="text/css" href="{{ asset('css/globale.css') }}" />
+        {% block stylesheet %}
+
+        {% endblock %}
+    </head>
+    <body style="padding-top: 70px;">
+        <nav class="navbar navbar-fixed-top navbar-inverse">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" target="_blank" href="{{ path('app_front_index') }}">Web Store</a>
+                </div>
+                <div id="navbar" class="collapse navbar-collapse">
+                    <ul style="font-size: smaller;" class="nav navbar-nav">
+                        <li {% if item is defined and item == "genres" %} class="active"{% endif %} ><a href="{{ path('app_admin_genres') }}">Genres</a></li>
+                        <li {% if item is defined and item == "categories" %} class="active"{% endif %} ><a href="{{ path('app_admin_categories') }}">Catégories</a></li>
+                        <li {% if item is defined and item == "marques" %} class="active"{% endif %} ><a href="{{ path('app_admin_marques') }}">Marques</a></li>
+                        <li class="dropdown {% if item is defined and item == "variations" %} active {% endif %}">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Variations <span class="caret"></span></a>
+                            <ul class="dropdown-menu">
+                                <li {% if sousItem is defined and sousItem == "couleur" %} class="active"{% endif %}><a href="{{ path('app_admin_couleurs') }}"><i class="fa fa-adjust" aria-hidden="true"></i> Couleurs</a></li>
+                                <li {% if sousItem is defined and sousItem == "taille" %} class="active"{% endif %}><a href="{{ path('app_admin_tailles') }}"><i class="fa fa-male" aria-hidden="true"></i> Tailles</a></li>
+                            </ul>
+                        </li>
+                        <li class="dropdown {% if item is defined and item == "villes_ml" %} active {% endif %}">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Villes/Livraison <span class="caret"></span></a>
+                            <ul class="dropdown-menu">
+                                <li {% if sousItem is defined and sousItem == "ville" %} class="active"{% endif %}><a href="{{ path('app_admin_villes') }}"><i class="fa fa-map-marker" aria-hidden="true"></i> Villes</a></li>
+                                <li {% if sousItem is defined and sousItem == "mode_livraison" %} class="active"{% endif %}><a href="{{ path('app_admin_modes_livraison') }}"><i class="fa fa-truck" aria-hidden="true"></i> Modes Livraison</a></li>
+                            </ul>
+                        </li>
+                        <li class="dropdown {% if item is defined and item == "produits" %} active {% endif %}">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Produits <span class="caret"></span></a>
+                            <ul class="dropdown-menu">
+                                <li {% if sousItem is defined and sousItem == "liste" %} class="active"{% endif %}><a href="{{ path('app_admin_produits') }}"><i class="fa fa-list" aria-hidden="true"></i> Liste</a></li>
+                                <li {% if sousItem is defined and sousItem == "nouveau" %} class="active"{% endif %}><a href="{{ path('app_admin_produits_nouveau') }}"><i class="fa fa-plus-square" aria-hidden="true"></i> Nouveau</a></li>
+                            </ul>
+                        </li>
+                        <li class="dropdown {% if item is defined and item == "commandes" %} active {% endif %}">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Commandes <span class="caret"></span></a>
+                            <ul class="dropdown-menu">
+                                <li {% if sousItem is defined and sousItem == "liste" %} class="active"{% endif %}><a href="{{ path('app_admin_commandes') }}"><i class="fa fa-list" aria-hidden="true"></i> Liste</a></li>
+                                <li {% if sousItem is defined and sousItem == "statut" %} class="active"{% endif %}><a href="{{ path('app_admin_statuts') }}"><i class="fa fa-tags" aria-hidden="true"></i> Statuts de commande</a></li>
+                            </ul>
+                        </li>
+                        <li {% if item is defined and item == "slides" %} class="active"{% endif %} ><a href="{{ path('app_admin_slides') }}"><i class="fa fa-sliders" aria-hidden="true"></i> Slides</a></li>
+                        <li {% if item is defined and item == "deals" %} class="active"{% endif %} ><a href="{{ path('app_admin_deals') }}">Deals</a></li>
+                        <li {% if item is defined and item == "clients" %} class="active"{% endif %} ><a href="{{ path('app_admin_clients') }}"><i class="fa fa-users" aria-hidden="true"></i> Clients</a></li>
+                        <li {% if item is defined and item == "coupons" %} class="active"{% endif %} ><a href="{{ path('app_admin_coupons') }}"><i class="fa fa-gift" aria-hidden="true"></i> Coupons</a></li>
+                        <li {% if item is defined and item == "templates" %} class="active"{% endif %} ><a href="{{ path('app_admin_templates') }}">Templates Email</a></li>
+                    </ul>
+                    <ul style="font-size: smaller;" class="nav navbar-nav navbar-right">
+                        <li><a href="{{ path('logout') }}"><i class="fa fa-sign-out" aria-hidden="true"></i> Déconnexion</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-12" id="notifications">
+                    {% for flashMessage in app.session.flashbag.get('notice') %}
+                        <br>
+                        <section>
+                            <div class="container" >
+                                <div class="row" >
+                                    <div class="col-lg-12" >
+                                        <div class="alert alert-warning alert-dismissable">
+                                            <i class="fa fa-exclamation-triangle" aria-hidden="true"></i>
+                                            <button aria-hidden="true" data-dismiss="alert" class="close" type="button">x</button>
+                                            {{ flashMessage|raw }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div> 
+                        </section>
+                    {% endfor %} 
+                    {% for flashMessage in app.session.flashbag.get('success') %}
+                        <br>
+                        <section>
+                            <div class="container" >
+                                <div class="row" >
+                                    <div class="col-lg-12" >
+                                        <div class="alert alert-success alert-dismissable">
+                                            <i class="icon fa fa-check" ></i>
+                                            <button aria-hidden="true" data-dismiss="alert" class="close" type="button">x</button>
+                                            {{ flashMessage|raw }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div> 
+                        </section>
+                    {% endfor %} 
+                    {% for flashMessage in app.session.flashbag.get('error') %}
+                        <br>
+                        <section>
+                            <div class="container" >
+                                <div class="row" >
+                                    <div class="col-lg-12" >
+                                        <div class="alert alert-danger alert-dismissable">
+                                            <i class="fa fa-times-circle" aria-hidden="true"></i>
+                                            <button aria-hidden="true" data-dismiss="alert" class="close" type="button">x</button>
+                                            {{ flashMessage|raw }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div> 
+                        </section>
+                    {% endfor %} 
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <ol class="breadcrumb">
+                        <span style="margin-right: 10px;">Vous êtes ici</span>
+                        <li><a href="#">Web Store</a></li>
+                            {% block breadcrumb %}
+
+                        {% endblock %}
+                    </ol>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="well well-ws">
+                        {% block contenu %}
+
+                        {% endblock %}
+
+                    </div> 
+                </div>
+            </div>
+        </div>
+        <script type="text/javascript" src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
+        <script type="text/javascript" src="{{ asset('js/jquery-ui.min.js') }}"></script>
+        <script type="text/javascript" src="{{ asset('js/jquery.ui.touch-punch.min.js') }}"></script>
+        <script type="text/javascript" src="{{ asset('js/bootstrap.min.js') }}"></script>
+        <script type="text/javascript" src="{{ asset('js/parsley.min.js') }}"></script>
+        <script type="text/javascript" src="{{ asset('js/parsley-fr.js') }}"></script>
+        <script type="text/javascript" src="{{ asset('js/globale.js') }}"></script>
+        {% block javascript %}
+        {% endblock %}
+    </body>
+</html>

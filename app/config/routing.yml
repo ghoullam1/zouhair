@@ -1,0 +1,19 @@
+app:
+    resource: "@AppBundle/Controller/"
+    type:     annotation
+    prefix:   /
+    
+security_check_route:
+    path: /login_check
+
+logout:
+    path: /logout
+    
+login:
+    path: /login
+    defaults: { _controller: AppBundle:Front:login}
+    
+gregwar_captcha_routing:
+    resource: "@GregwarCaptchaBundle/Resources/config/routing/routing.yml"
+
+

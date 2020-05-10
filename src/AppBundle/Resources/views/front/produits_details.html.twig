@@ -1,0 +1,300 @@
+{% extends "layout_front.html.twig" %}
+{% block title %}{{ produit.titre }}{% endblock %}
+
+{% block head %}
+    <meta property="og:url"                content="{{ path(app.request.attributes.get("_route"),app.request.attributes.get("_route_params")) }}" />
+    <meta property="og:type"               content="article" />
+    <meta property="og:title"              content="{{ produit.titre }}" />
+    <meta property="og:description"        content="{{ produit.description }}" />
+    <meta property="og:image"              content="{{ path('app_image',{'nom':produit.firstImage.nom}) }}" />
+{% endblock %}
+
+{% block style %}
+    <link rel="stylesheet" type="text/css" href="{{ asset('front/css/jssocials.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ asset('front/css/jssocials-theme-minima.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ asset('front/css/produits_details.css') }}" />
+{% endblock %}
+
+{% block contenu %}
+
+    <div class="page-title fix"><!--Start Title-->
+        <div class="overlay section">
+            <h2>DÉTAILS DU PRODUIT</h2>
+        </div>
+    </div><!--End Title-->
+    <section class="product-page page fix"><!--Start Product Details Area-->
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="details-pro-tab">
+                        <!-- Tab panes -->
+                        <div class="tab-content details-pro-tab-content">
+                            {% if produit.images|length > 0 %}
+                                {% for image in produit.images %}
+                                    <div class="tab-pane fade in {% if loop.first %}active{% endif %}" id="image-{{ loop.index }}">
+                                        <div class="simpleLens-big-image-container">
+                                            <a class="simpleLens-lens-image" data-lens-image="{{ image("images/upload/" ~ image.fullName).resize(1200,1000) }}">
+                                                <img src="{{ image("images/upload/" ~ image.fullName).resize(600,500) }}" alt="" class="simpleLens-big-image">
+                                            </a>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            {% else %}
+                                <div class="tab-pane fade in active" id="image-1">
+                                    <div class="simpleLens-big-image-container">
+                                        <a class="simpleLens-lens-image" data-lens-image="{{ image("images/upload/" ~ produit.firstImage.fullName).resize(600,500) }}">
+                                            <img src="{{ image("images/upload/" ~ produit.firstImage.fullName).resize(600,500) }}" alt="" class="simpleLens-big-image">
+                                        </a>
+                                    </div>
+                                </div>
+                            {% endif %}
+                        </div>
+                        <!-- Nav tabs -->
+                        {% if produit.images|length > 0 %}
+                            <ul class="tabs-list details-pro-tab-list" role="tablist">
+                                {% for image in produit.images %}
+                                    <li {% if loop.first %}class="active"{% endif %}><a href="#image-{{ loop.index }}" data-toggle="tab"><img src="{{ image("images/upload/" ~ image.fullName).resize(200,200) }}" alt="" /></a></li>
+                                        {% endfor %}
+                            </ul>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="shop-details">
+                        <!-- Product Name -->
+                        <h2>{{ produit.titre }}</h2>
+                        <!-- Product Ratting -->
+                        {% set note = produit.note %}
+                        <div title="{{ note }}/5" class="pro-ratting">
+                            {% for i in range(1, 5) %}
+                                {% if i <= note %}
+                                    <i class="fa fa-star on"></i> 
+                                {% else %}
+                                    <i class="fa fa-star off"></i> 
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                        <h3>{{ produit.prix|number_format(2,'.',' ') }} DH</h3>
+                        <h4>{{ produit.commentaires|length }} Commentaires</h4>
+                        <h5>Disponibilité - <span>{{ produit.disponibilite }}</span></h5>
+                        <div class="action-btn">
+                            {% if produit.occasion %}
+                                <a>Occasion</a>
+                            {% else %}
+                                <a>Neuf</a>
+                            {% endif %}
+                            {% if produit.enSolde %}
+                                <a>En solde</a>
+                            {% endif %}
+                            {% if produit.encoreNouveau %}
+                                <a>Nouveau</a>
+                            {% endif %}
+
+                            {% if produit.marque %}
+                                <img class="img-responsive pull-right hidden-sm hidden-xs" src="{{ image("images/upload/"~ produit.marque.image.fullName).resize(100,35) }}" />
+                            {% endif %}
+                        </div>
+                        <p style="min-height: 60px;">{{ produit.description }}</p>
+                        <div class="select-menu fix">
+                            {% if produit.variations|length > 0 %}
+                                {% if tailles|length > 0 %}
+                                    <div class="sort fix">
+                                        <h4>Taille</h4>
+                                        <select data-url="{{ path('app_front_available_colors') }}" data-reference="{{ produit.reference }}" id="taille">
+                                            {% for t in tailles  %}
+                                                <option value="{{ t.id }}">{{ t.nom }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                {% endif %}
+                                {% if couleurs|length > 0 %}
+                                    <div class="sort fix">
+                                        <h4>Couleur</h4>
+                                        <select data-url="{{ path('app_front_available_sizes') }}" data-reference="{{ produit.reference }}" id="couleur">
+                                            {% for c in couleurs  %}
+                                                <option value="{{ c.id }}">{{ c.nom }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                {% endif %}
+                            {% endif %}
+                            <div class="sort fix">
+                                <h4>Qté</h4>
+                                <select id="quantite">
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                    <option value="5">5</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div style="margin:30px 0;">
+                            <a data-reference="{{ produit.reference }}" data-url="{{ path('app_front_panier_add') }}" data-loading-text='Ajout en cours <i class="fa fa-spinner fa-spin" aria-hidden="true"></i>' id="add-panier" class="add-panier"><i class="fa fa-shopping-cart"></i> Ajouter au panier</a>
+                        </div>
+                        <div class="social-row">
+                            <div id="share"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-12 fix">
+                    <div class="description">
+                        <!-- Nav tabs -->
+                        <ul class="nav product-nav">
+                            <li class="active"><a data-toggle="tab" href="#commentaires">Commentaires</a></li>
+                        </ul>
+                        <!-- Tab panes -->
+                        <div class="tab-content">
+                            <div id="commentaires" class="tab-pane fade active in" role="tabpanel">
+                                <div id="comments">
+                                    <div class="comments-list">
+                                        <ol class="commentlists">
+                                            {% for commentaire in pagination %}
+                                                <li class="sin-comment">
+                                                    <div class="the-comment">
+                                                        <div class="avatar">
+                                                            <img alt="" src="{{ image('images/upload/' ~ commentaire.client.imageWithCheking.fullName).resize(65,65) }}">
+                                                        </div>
+                                                        <div class="comment-box">
+                                                            <div class="comment-author">
+                                                                {% set noteCom = commentaire.note %}
+                                                                <div style="float: none;" class="pro-ratting">
+                                                                    {% for i in range(1, 5) %}
+                                                                        {% if i <= noteCom %}
+                                                                            <i class="fa fa-star on"></i> 
+                                                                        {% else %}
+                                                                            <i class="fa fa-star off"></i> 
+                                                                        {% endif %}
+                                                                    {% endfor %}
+                                                                </div>
+                                                                <p class="com-name"><strong>{{ commentaire.client.nom ~ ' ' ~ commentaire.client.prenom }}</strong></p>
+
+                                                                {{ commentaire.dateCommentaire|date('d/m/Y - H:i') }}
+                                                            </div>
+                                                            <div class="comment-text">
+                                                                <p>{{ commentaire.commentaire }}</p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                            {% endfor %}
+                                        </ol>
+                                        <div class="pagination">
+                                            {{ knp_pagination_render(pagination) }}
+                                        </div>
+                                    </div>
+                                    {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+                                        {% if app.user.productCommented(produit.reference) %}
+                                            <div class="alert alert-info">
+                                                <p>Vous avez dèjà noter ce produit</p>
+                                            </div>
+                                        {% else %}
+                                            <div class="commentform">
+                                                <h4 class="heading">LAISSER UN COMMENTAIRE</h4>
+                                                {{ form_start(formCommentaire,{'attr':{'class':'form-horizontal','method':'POST'}}) }}
+                                                {% spaceless %}
+                                                    {% if not formCommentaire.vars.valid %}
+                                                        <div class="alert alert-danger">
+                                                            {{ form_errors(formCommentaire) }}
+
+                                                            {% for children in formCommentaire.children %}
+                                                                {% if not children.vars.valid %}
+                                                                    {{ form_errors(children) }}
+                                                                {% endif %}
+                                                            {% endfor %}
+                                                        </div>
+                                                    {% endif %}
+                                                {% endspaceless %}
+                                                <div class="form-group">
+                                                    {{ form_label(formCommentaire.commentaire, "Commentaire : ", {'label_attr': {'class': 'col-sm-2 control-label'}}) }}
+                                                    <div class="col-sm-10">
+                                                        {{ form_widget(formCommentaire.commentaire, {'attr': {'class': 'form-control','rows':'4'}}) }}
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    {{ form_label(formCommentaire.note, "Note : ", {'label_attr': {'class': 'col-sm-2 control-label'}}) }}
+                                                    <div class="col-sm-10">
+                                                        {{ form_widget(formCommentaire.note, {'attr': {'value': '1','style':'display:none;'}}) }}
+                                                        <div class="rating rating2">
+                                                            <a class="no-selected-star" title="5">★</a>
+                                                            <a class="no-selected-star" title="4">★</a>
+                                                            <a class="no-selected-star" title="3">★</a>
+                                                            <a class="no-selected-star" title="2">★</a>
+                                                            <a class="selected-star" title="1">★</a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    {{ form_label(formCommentaire.captcha, "Antispam : ", {'label_attr': {'class': 'col-sm-2 control-label'}}) }}
+                                                    <div class="col-sm-10">
+                                                        {{ form_widget(formCommentaire.captcha, {'attr': {'class': 'form-control','style':'max-width:150px;margin-top:5px;'}}) }}
+                                                    </div>
+                                                </div>
+
+                                                <p class="form-submit">
+                                                    <input type="submit" value="Envoyer" id="submit" name="submit">
+                                                </p>
+
+                                                {{ form_rest(formCommentaire) }}
+                                                {{ form_end(formCommentaire) }}
+                                            </div><!-- end commentform -->
+                                        {% endif %}
+                                    {% else %}
+                                        <div class="alert alert-info">
+                                            <p>Vous devez être connecté pour laisser un commentaire</p>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% if produitsLies|length > 0 %}
+                    <div class="col-md-12 fix">
+                        <div class="section-title">
+                            <h2>PRODUITS ASSOCIÉS</h2>
+                            <div class="underline"></div>
+                        </div>
+                        <div class="related-pro-slider owl-carousel">
+                            {% for p in produitsLies %}
+                                <!-- Single Product Start -->
+                                <div class="product-item fix">
+                                    <div class="product-img-hover">
+                                        <!-- Product image -->
+                                        <a href="{{ path('app_front_produits_details',{'reference':p.reference}) }}" class="pro-image fix"><img src="{{ image("images/upload/" ~ p.firstImage.fullName).resize(270,246) }}" alt="product" /></a>
+                                    </div>
+                                    <div class="pro-name-price-ratting">
+                                        <!-- Product Name -->
+                                        <div class="pro-name">
+                                            <a href="{{ path('app_front_produits_details',{'reference':p.reference}) }}">{{ p.titre }}</a>
+                                        </div>
+                                        <!-- Product Ratting -->
+                                        {% set note = p.note %}
+                                        <div class="pro-ratting">
+                                            {% for i in range(1, 5) %}
+                                                {% if i <= note %}
+                                                    <i class="fa fa-star on"></i> 
+                                                {% else %}
+                                                    <i class="fa fa-star off"></i> 
+                                                {% endif %}
+                                            {% endfor %}
+                                        </div>
+                                        <!-- Product Price -->
+                                        <div class="pro-price fix">
+                                            <p><span class="new">{{ p.prix|number_format(2,'.',' ') }} DH</span></p>
+                                        </div>
+                                    </div>
+                                </div><!-- Single Product End -->
+                            {% endfor %}
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </section><!--End Product Details Area-->
+
+{% endblock %}
+{% block javascript %}
+    <script type="text/javascript" src="{{ asset('front/js/jssocials.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('front/js/produit.js') }}"></script>
+{% endblock %}

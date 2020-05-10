@@ -1,0 +1,75 @@
+{% extends "layout_admin.html.twig" %}
+{% set item = "variations" %}
+{% set sousItem = "couleur" %}
+
+{% block title %}Couleurs{% endblock %}
+
+
+{% block breadcrumb %}
+    <li><a href="{{ path('app_admin_index') }}">Administration</a></li>
+    <li class="active">Couleus</li>
+    {% endblock %}
+
+{% block contenu %}
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="well well-ws-inc">
+                <legend><i class="fa fa-list" aria-hidden="true"></i> Liste Couleurs</legend>
+                {% if couleurs|length > 0 %}
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Couleur</th>
+                                    <th>Nom</th>
+                                    <th>Code</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for couleur in couleurs %}
+                                    <tr>
+                                        <td><div style="background-color: {{ couleur.code }};" class="divColor"></div></td>
+                                        <td>{{ couleur.nom }}</td>
+                                        <td>{{ couleur.code }}</td>
+                                        <td class="text-center"><a class="pull-right btn btn-sm btn-danger" href="{{ path('app_admin_couleurs_remove',{'id':couleur.id}) }}"><i class="fa fa-times" title="Supprimer" ></i></a> <a  class="pull-right btn btn-sm btn-primary" href="{{ path('app_admin_couleurs_edit',{'id':couleur.id}) }}"><i class="fa fa-pencil-square-o" title="Modifier" ></i></a></td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>                   
+                {% else %}
+                    <div class="alert alert-info">
+                        <p><strong>Aucune couleur enregistré.</strong>Veuillez utiliser le formulaire d'ajout pour enregistrer des nouvelles couleurs.</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="well well-ws-inc">
+                <legend><i class="fa fa-plus-square" aria-hidden="true"></i> Nouvelle Couleur</legend>
+                {{ form_start(formCouleur,{'attr':{'class':'form-horizontal','method':'POST','data-parsley-validate':''}}) }}
+                {{ form_errors(formCouleur) }}
+
+                <div class="form-group">
+                    {{ form_label(formCouleur.nom, "Nom : ", {'label_attr': {'class': 'col-sm-3 control-label'}}) }}
+                    <div class="col-sm-9">
+                        {{ form_widget(formCouleur.nom, {'attr': {'class': 'form-control'}}) }}
+                    </div>
+                </div>
+                <div class="form-group">
+                    {{ form_label(formCouleur.code, "Code : ", {'label_attr': {'class': 'col-sm-3 control-label'}}) }}
+                    <div class="col-sm-9">
+                        {{ form_widget(formCouleur.code, {'attr': {'class': 'form-control'}}) }}
+                    </div>
+                </div>
+                <div class="form-group">
+                    <button class="btn btn-primary btn-sm pull-right" type="submit"><i class="fa fa-plus-square" aria-hidden="true"></i> Ajouter</button>
+                </div>
+                {{ form_rest(formCouleur) }}
+                {{ form_end(formCouleur) }}
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,43 @@
+{% extends "layout_admin.html.twig" %}
+{% set item = "variations" %}
+{% set sousItem = "couleur" %}
+{% block title %}Couleur : {{ couleur.nom }}{% endblock %}
+
+
+{% block breadcrumb %}
+    <li><a href="{{ path('app_admin_index') }}">Administration</a></li>
+    <li><a href="{{ path('app_admin_couleurs') }}">Couleurs</a></li>
+    <li class="active">{{ couleur.nom }}</li>
+    {% endblock %}
+
+{% block contenu %}
+
+    <div class="row">
+        <div class="col-md-6 col-md-offset-3">
+            <div class="well well-ws-inc">
+                <legend><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Modifier Couleur ({{ couleur.nom }})</legend>
+                {{ form_start(formCouleur,{'attr':{'class':'form-horizontal','method':'POST','data-parsley-validate':''}}) }}
+                {{ form_errors(formCouleur) }}
+
+                <div class="form-group">
+                    {{ form_label(formCouleur.nom, "Nom : ", {'label_attr': {'class': 'col-sm-3 control-label'}}) }}
+                    <div class="col-sm-9">
+                        {{ form_widget(formCouleur.nom, {'attr': {'class': 'form-control'}}) }}
+                    </div>
+                </div>
+                <div class="form-group">
+                    {{ form_label(formCouleur.code, "Code : ", {'label_attr': {'class': 'col-sm-3 control-label'}}) }}
+                    <div class="col-sm-9">
+                        {{ form_widget(formCouleur.code, {'attr': {'class': 'form-control'}}) }}
+                    </div>
+                </div>
+                <div class="form-group">
+                    <button class="btn btn-primary btn-sm pull-right" type="submit"><i class="fa fa-floppy-o" aria-hidden="true"></i> Enregistrer</button>
+                </div>
+                {{ form_rest(formCouleur) }}
+                {{ form_end(formCouleur) }}
+            </div>
+        </div>
+    </div>
+{% endblock %}
+

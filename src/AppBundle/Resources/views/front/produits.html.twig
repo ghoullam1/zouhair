@@ -1,0 +1,251 @@
+{% extends "layout_front.html.twig" %}
+{% block title %}{% if genre is not null %}{{ genre.libelle ~ ' - ' ~ categorie.libelle }}{% else %}{{ categorie.libelle }}{% endif %}{% endblock %}
+
+{% block contenu %}
+    <div {% if categorie.image is not null %}style="background: rgba(0, 0, 0, 0) url('{{ image("images/upload/" ~ categorie.image.fullName).resize(1600,255) }}') no-repeat scroll center center / cover;"{% endif %} class="page-title fix"><!--Start Title-->
+        <div class="overlay section">
+            <h2>{{ categorie.libelle }} </h2>
+        </div>
+    </div>
+    <div class="shop-product-area section fix">
+        <div style="margin-bottom: 25px;" class="container">
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="shop-sidebar fix">
+                        <!-- single-sidebar start -->
+                        <div class="sin-shop-sidebar shop-category">
+                            {% if sideCategories is not null %}
+                                <h2>{{ genre.libelle }}</h2>
+                                {% if sideCategories|length > 0 %}
+                                    <ul>
+                                        {% for cat in sideCategories %}
+                                            <li {% if cat.id == categorie.id %} class="active"{% endif %}  ><a {% if cat.id != categorie.id %} href="{{ path('app_front_produits',{'slug':cat.slug,'id_genre':genre.id}) }}"{% endif %}>{{ cat.libelle }}</a></li>
+                                            {% endfor %}
+                                    </ul>
+                                {% endif %}
+                            {% else %}
+                                <h2>{{ categorie.libelle }}</h2>
+                                {% if categorie.genres|length > 0 %}
+                                    <ul>
+                                        {% for g in categorie.genres %}
+                                            <li><a href="{{ path('app_front_produits',{'slug':categorie.slug,'id_genre':g.id}) }}">{{ g.libelle }}</a></li>
+                                            {% endfor %}
+                                    </ul>
+                                {% endif %}
+                            {% endif %}
+                        </div>
+                        <!-- single-sidebar end -->
+
+                        <!-- single-sidebar start -->
+                        {% if sideMarques|length > 0 %}
+                            <div class="sin-shop-sidebar shop-brands">
+                                <h2>Marques</h2>
+                                <ul>
+                                    {% for marque in sideMarques %}
+                                        <li {% if criteres.m is defined  and criteres.m == marque.id %} class="active" {% endif %} ><a {% if criteres.m is not defined or ( criteres.m is defined  and criteres.m != marque.id ) %} {% if genre is null %} href="{{ path('app_front_produits',{'slug':categorie.slug}) }}?m={{ marque.id }}"  {% else %} href="{{ path('app_front_produits',{'slug':categorie.slug,'id_genre':genre.id}) }}?m={{ marque.id }}" {% endif %} {% endif %}>{{ marque.nom }}</a></li>
+                                        {% endfor %}
+                                </ul>
+                            </div>
+                        {% endif %}
+                        <!-- single-sidebar end -->
+                        <!-- single-sidebar start -->
+                        {% if filterPrice.prixMax > filterPrice.prixMin  %}
+                            <div class="sin-shop-sidebar product-price-range">
+                                <h2>Prix</h2>
+                                <div class="slider-range-container">
+                                    <div id="slider-range"></div>
+                                    <p>
+                                        <input type="text" id="price-amount" readonly>
+                                    </p>
+                                </div>
+                            </div>
+                        {% endif %}
+                        <!-- single-sidebar end -->
+                        <!-- single-sidebar start -->
+                        {% if bestSeller|length > 0 %}
+                            <div class="sin-shop-sidebar shop-brands">
+                                <h2>Meilleure vente</h2>
+                                {% for p in bestSeller %}
+                                    <div class="product-item fix">
+                                        <div class="product-img-hover">
+                                            <a href="{{ path('app_front_produits_details',{'reference':p.reference}) }}" class="pro-image fix"><img src="{{ image("images/upload/" ~ p.firstImage.fullName).resize(270,246) }}" alt="product" /></a>
+                                        </div>
+                                        <div class="pro-name-price-ratting">
+                                            <!-- Product Name -->
+                                            <div class="pro-name">
+                                                <a href="{{ path('app_front_produits_details',{'reference':p.reference}) }}">{{ p.titre }}</a>
+                                            </div>
+                                            <!-- Product Ratting -->
+                                            {% set note = p.note %}
+                                            <div class="pro-ratting">
+                                                {% for i in range(1, 5) %}
+                                                    {% if i <= note %}
+                                                        <i class="fa fa-star on"></i> 
+                                                    {% else %}
+                                                        <i class="fa fa-star off"></i> 
+                                                    {% endif %}
+                                                {% endfor %}
+                                            </div>
+                                            <!-- Product Price -->
+                                            <div class="pro-price fix">
+                                                <p><span class="new">{{ p.prix|number_format(2,'.',' ') }} DH</span></p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                            {#   <div class="sin-shop-sidebar shop-add">
+                                   <a title="{{ bestSeller[0].titre }}" href="{{ path('app_front_produits_details',{'reference':bestSeller[0].reference}) }}"><img src="{{ image('images/upload/' ~ bestSeller[0].firstImage.fullName).resize(220,230) }}" ></a>
+                               </div>#}
+                        {% endif %}
+                        <!-- single-sidebar end -->
+                    </div>
+                </div>
+                <div class="col-md-9">
+                    <div class="row">
+                        <!-- Shop Tool Bar -->
+                        <div class="shop-tool-bar col-sm-12 fix">
+                            <div class="view-mode">
+                                <a class="active"><i class="fa fa-th-list"></i></a>
+                            </div>
+                            <div class="sort-by">
+                                <span>Trier par</span>
+                                <select id="sort-by" name="sort-by">
+                                    <option {% if criteres.d is not defined %} selected=""{% endif %}  value="0">Option</option>
+                                    <option {% if criteres.d is defined and criteres.d == 'ASC' %} selected=""{% endif %} value="ASC">Prix Croissant</option>
+                                    <option {% if criteres.d is defined and criteres.d == 'DESC' %} selected=""{% endif %} value="DESC">Prix Décroissant</option>
+                                </select>
+                            </div>
+                            <div class="show-product">
+                                <span>Afficher</span>
+                                <select id="showing-number" name="sort-by">
+                                    <option {% if criteres.l is not defined or criteres.l == '5' %} selected="" {% endif %}value="5">5</option>
+                                    <option {% if criteres.l is defined and criteres.l == '10' %} selected="" {% endif %} value="10">10</option>
+                                    <option {% if criteres.l is defined and criteres.l == '20' %} selected="" {% endif %} value="20">20</option>
+                                    <option {% if criteres.l is defined and criteres.l == '50' %} selected="" {% endif %} value="50">50</option>
+                                </select>
+                                <span>Par Page</span>
+                            </div>
+                            <div class="pro-Showing">
+                                <span>Liste {{ pagination.paginationData.firstItemNumber > 0 ? pagination.paginationData.firstItemNumber : "0" }} - {{ pagination.paginationData.lastItemNumber > 0 ? pagination.paginationData.lastItemNumber : "0" }} de {{ pagination.paginationData.totalCount }} éléments</span>
+                            </div>
+                        </div>
+                        {% if pagination|length > 0 %}
+                            <div class="shop-products">
+                                <!-- Single Product -->
+                                {% for produit in pagination %}
+                                    <div class="single-list-product col-sm-12">
+                                        <div class="list-pro-image">
+                                            <a href="{{ path('app_front_produits_details',{'reference':produit.reference}) }}">
+                                                <img src="{{ image("images/upload/" ~ produit.firstImage.fullName).resize(270,246) }}" alt="{{ produit.titre }}" />
+                                            </a>
+                                        </div>
+                                        <div class="list-pro-des fix">
+                                            <a class="pro-name" href="{{ path('app_front_produits_details',{'reference':produit.reference}) }}">{{ produit.titre }}</a>
+                                            {% set note = produit.note %}
+                                            <div class="pro-ratting">
+                                                {% for i in range(1, 5) %}
+                                                    {% if i <= note %}
+                                                        <i class="fa fa-star on"></i> 
+                                                    {% else %}
+                                                        <i class="fa fa-star off"></i> 
+                                                    {% endif %}
+                                                {% endfor %}
+                                            </div>
+                                            <h4 class="list-pro-price"><span class="new">{{ produit.prix|number_format(2,'.',' ') }} DH</span></h4>
+                                            <p style="height: 96px;">{{ produit.description }}</p>
+                                            <div class="list-actions-btn">
+                                                {% if produit.stock > 0 %}
+                                                    <a>En stock</a>
+                                                {% else %}
+                                                    <a>En rupture du stock</a>
+                                                {% endif %}
+                                                {% if produit.occasion %}
+                                                    <a>Occasion</a>
+                                                {% else %}
+                                                    <a>Neuf</a>
+                                                {% endif %}
+                                                {% if produit.enSolde %}
+                                                    <a>En solde</a>
+                                                {% endif %}
+                                                {% if produit.encoreNouveau %}
+                                                    <a>Nouveau</a>
+                                                {% endif %}
+
+                                                {% if produit.marque %}
+                                                    <img class="img-responsive pull-right hidden-sm hidden-xs" src="{{ image("images/upload/"~ produit.marque.image.fullName).resize(130,50) }}" />
+                                                {% endif %}
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                                <!-- Pagination -->
+                                <div class="pagination">
+                                    {{ knp_pagination_render(pagination) }}
+                                </div>
+                            </div> 
+                        {% else %}
+                            <br/><br/><br/>
+                            <div class="alert alert-info">
+                                <p>Aucun produit trouvé !</p>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endblock %}
+    {% block javascript %}
+
+        <script type="text/javascript">
+            $(document).ready(function () {
+            {% if filterPrice.prixMax > filterPrice.prixMin  %}
+                var min = {% if criteres.min is defined %}{{ criteres.min }}{% else %}{{ filterPrice.prixMin }}{% endif %};
+                var max = {% if criteres.max is defined %}{{ criteres.max }}{% else %}{{ filterPrice.prixMax }}{% endif %};
+                /*----- Price Slider -----*/
+                $("#slider-range").slider({
+                range: true,
+                        min:{{ filterPrice.prixMin }},
+                        max:{{ filterPrice.prixMax }},
+                        values: [min, max],
+                        slide: function (event, ui) {
+                        $("#price-amount").val(ui.values[ 0 ] + " DH - " + ui.values[ 1 ] + " DH");
+                        },
+                        stop: function(event, ui) {
+                        var url = "{% if genre is null %} {{ path('app_front_produits',{'slug':categorie.slug}) }} {% else %}{{ path('app_front_produits',{'slug':categorie.slug,'id_genre':genre.id}) }}{% endif %}";
+                        url += "?min=" + ui.values[ 0 ] + "&max=" + ui.values[ 1 ];
+                {% for key, critere in criteres if key not in ['min','max','g','c'] %}
+                            url += "&{{ key ~ '=' ~ critere }}";
+                {% endfor %}
+                            $(location).attr('href', url);
+                            }
+                    }
+                    );
+                    $("#price-amount").val($("#slider-range").slider("values", 0) + " DH" +
+                            " - " + $("#slider-range").slider("values", 1) + " DH");
+            {% endif %}
+
+                $("#showing-number").on('change', function(){
+                var url = "{% if genre is null %} {{ path('app_front_produits',{'slug':categorie.slug}) }} {% else %}{{ path('app_front_produits',{'slug':categorie.slug,'id_genre':genre.id}) }}{% endif %}";
+                url += "?l=" + $(this).val();
+            {% for key, critere in criteres if key not in ['l','g','c'] %}
+                url += "&{{ key ~ '=' ~ critere }}";
+            {% endfor %}
+                $(location).attr('href', url);
+                });
+                $("#sort-by").on('change', function(){
+                var url = "{% if genre is null %} {{ path('app_front_produits',{'slug':categorie.slug}) }} {% else %}{{ path('app_front_produits',{'slug':categorie.slug,'id_genre':genre.id}) }}{% endif %}";
+                if ($(this).val() !== '0')
+                        url += "?d=" + $(this).val() + "&s=p.prix";
+            {% for key, critere in criteres if key not in ['s','d','l','g','c'] %}
+                url += "&{{ key ~ '=' ~ critere }}";
+            {% endfor %}
+
+                $(location).attr('href', url);
+                });
+                });
+
+        </script>
+
+    {% endblock %}

@@ -1,0 +1,48 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 22 mars 2017, 21:33:49
+    Author     : abdelhak
+*/
+
+textarea,input[type=text],input[type=number]{
+    background: transparent none repeat scroll 0 0;
+    border: 1px solid #cccccc;
+    margin-bottom: 20px;
+    padding: 7px 15px;
+    width: 100%;
+}
+.rating {
+    width: 150px;
+    overflow:hidden;
+}
+.rating a {
+    float:right;
+    text-decoration: none;
+    -webkit-transition: color .4s;
+    -moz-transition: color .4s;
+    -o-transition: color .4s;
+    transition: color .4s;
+}
+.rating a:hover,
+.rating a:hover ~ a{
+    color: orange;
+    cursor: pointer;
+}
+.rating2 {
+    direction: rtl;
+}
+.rating2 a {
+    float:none;
+    font-size: 30px;
+    cursor: pointer;
+}
+.selected-star{
+    color: orange;
+}
+.no-selected-star{
+    color: #aaa;
+}

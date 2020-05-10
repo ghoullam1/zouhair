@@ -1,0 +1,41 @@
+# Learn more about services, parameters and containers at
+# http://symfony.com/doc/current/service_container.html
+parameters:
+#    parameter_name: value
+
+services:
+    app.security.authentication_handler:
+        class:  AppBundle\Services\AuthenticationHandler
+        public: false
+        arguments:
+            - "@router"
+            - "@session"
+            - "@doctrine.orm.entity_manager"
+            - "@security.token_storage"
+    
+    app.exception_controller:
+        class: AppBundle\Controller\ExceptionController
+        arguments: ['@twig', '%kernel.debug%']
+        
+    app.entry_point.user_login:
+        class: AppBundle\Services\LoginEntryPoint
+        arguments: ['@router']
+        
+    app.front.panier_manager:
+        class:  AppBundle\Services\Panier\PanierManager
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@security.token_storage"
+            
+    app.stock_manager:
+        class:  AppBundle\Services\Produit\StockManager
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            
+    app.commande_historique:
+        class:  AppBundle\Services\Commande\CommandeStatutManager
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "%mailer_user%"
+            - "@swiftmailer.mailer"
+            

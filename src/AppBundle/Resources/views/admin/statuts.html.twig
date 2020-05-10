@@ -1,0 +1,113 @@
+{% extends "layout_admin.html.twig" %}
+{% set item = "commandes" %}
+{% set sousItem = "statut" %}
+
+{% block title %}Statuts Commande{% endblock %}
+
+{% block stylesheet %}
+    <link rel="stylesheet" type="text/css" href="{{ asset('css/bootstrap-switch.css') }}" />
+{% endblock %}
+
+{% block breadcrumb %}
+    <li><a href="{{ path('app_admin_index') }}">Administration</a></li>
+    <li class="active">Statuts Commande</li>
+    {% endblock %}
+
+{% block contenu %}
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="well well-ws-inc">
+                <legend><i class="fa fa-list" aria-hidden="true"></i> Liste Statuts</legend>
+                {% if statuts|length > 0 %}
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Id</th>
+                                    <th>Libellé</th>
+                                    <th>Est payé</th>
+                                    <th>Est livré</th>
+                                    <th>Envoyer un email</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for statut in statuts %}
+                                    <tr>
+                                        <td>{{ statut.id }}</td>
+                                        <td>{{ statut.libelle }}</td>
+                                        <td>{% if statut.estPaye %} <span class="label label-success">Oui</span> {% else %} <span class="label label-danger">Non</span> {% endif %}</td>
+                                        <td>{% if statut.estLivre %} <span class="label label-success">Oui</span> {% else %} <span class="label label-danger">Non</span> {% endif %}</td>
+                                        <td>{% if statut.sendMail %} <span class="label label-success">Oui</span> {% else %} <span class="label label-danger">Non</span> {% endif %}</td>
+                                        <td><a class="btn btn-sm btn-primary pull-right" href="{{ path('app_admin_statuts_edit',{'id':statut.id}) }}" style="margin: 5px;"><i class="fa fa-pencil-square-o" title="Modifier" ></i></a><a style="margin: 5px;" class="btn btn-sm btn-danger pull-right" href="{{ path('app_admin_statuts_remove',{'id':statut.id}) }}"><i title="Supprimer" class="fa fa-trash-o" aria-hidden="true"></i></a></td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>                   
+                {% else %}
+                    <div class="alert alert-info">
+                        <p><strong>Aucun statut enregistré.</strong>Veuillez utiliser le formulaire d'ajout pour enregistrer des nouveaux statuts.</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="well well-ws-inc">
+                <legend><i class="fa fa-plus-square" aria-hidden="true"></i> Nouveau Statut</legend>
+                {{ form_start(formStatut,{'attr':{'class':'form-horizontal','method':'POST','data-parsley-validate':''}}) }}
+                {{ form_errors(formStatut) }}
+
+                <div class="form-group">
+                    {{ form_label(formStatut.libelle, "Libellé : ", {'label_attr': {'class': 'col-sm-2 control-label'}}) }}
+                    <div class="col-sm-10">
+                        {{ form_widget(formStatut.libelle, {'attr': {'class': 'form-control'}}) }}
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    {{ form_label(formStatut.estPaye, "Est payé : ", {'label_attr': {'class': 'col-sm-2 control-label'}}) }}
+                    <div style="margin-top: 5px;" class="col-sm-10">
+                        {{ form_widget(formStatut.estPaye, {'attr': {'data-on-text': 'Oui','data-off-text': 'Non','class':'switch'}}) }}
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    {{ form_label(formStatut.estLivre, "Est livré : ", {'label_attr': {'class': 'col-sm-2 control-label'}}) }}
+                    <div style="margin-top: 5px;" class="col-sm-10">
+                        {{ form_widget(formStatut.estLivre, {'attr': {'data-on-text': 'Oui','data-off-text': 'Non','class':'switch'}}) }}
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    {{ form_label(formStatut.sendMail, "Envoyer un email : ", {'label_attr': {'class': 'col-sm-2 control-label'}}) }}
+                    <div style="margin-top: 5px;" class="col-sm-10">
+                        {{ form_widget(formStatut.sendMail, {'attr': {'data-on-text': 'Oui','data-off-text': 'Non','class':'switch'}}) }}
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    {{ form_label(formStatut.template, "Template : ", {'label_attr': {'class': 'col-sm-2 control-label'}}) }}
+                    <div class="col-sm-10">
+                        {{ form_widget(formStatut.template, {'attr': {'class': 'form-control'}}) }}
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <button class="btn btn-primary btn-sm pull-right" type="submit"><i class="fa fa-plus-square" aria-hidden="true"></i> Ajouter</button>
+                </div>
+                {{ form_rest(formStatut) }}
+                {{ form_end(formStatut) }}
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascript %}
+    <script type="text/javascript" src="{{ asset('js/bootstrap-switch.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/tinymce/tinymce.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/statuts.js') }}"></script>
+{% endblock %}

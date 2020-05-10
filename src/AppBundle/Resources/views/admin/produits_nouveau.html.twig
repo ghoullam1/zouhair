@@ -1,0 +1,174 @@
+{% extends "layout_admin.html.twig" %}
+{% set item = "produits" %}
+{% set sousItem = "nouveau" %}
+{% block title %}Produits : Nouveau{% endblock %}
+
+
+{% block breadcrumb %}
+    <li><a href="{{ path('app_admin_index') }}">Administration</a></li>
+    <li><a href="{{ path('app_admin_produits') }}">Produits</a></li>
+    <li class="active">Nouveau Produit</li>
+    {% endblock %}
+
+{% block stylesheet %}
+    <link rel="stylesheet" type="text/css" href="{{ asset('css/bootstrap-switch.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ asset('css/bootstrap-multiselect.css') }}" />
+{% endblock %}
+
+{% block contenu %}
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="well well-ws-inc">
+                <legend><i class="fa fa-plus-square" aria-hidden="true"></i> Nouveau Produit</legend>
+
+                {{ form_start(formProduit,{'attr':{'class':'form-horizontal','enctype':'multipart/form-data','method':'POST','data-parsley-validate':''}}) }}
+                {{ form_errors(formProduit) }}
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            {{ form_label(formProduit.titre, "Titre : ", {'label_attr': {'class': 'col-sm-3 control-label'}}) }}
+                            <div class="col-sm-9">
+                                {{ form_widget(formProduit.titre, {'attr': {'class': 'form-control'}}) }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            {{ form_label(formProduit.description, "Déscription : ", {'label_attr': {'class': 'col-sm-3 control-label'}}) }}
+                            <div class="col-sm-9">
+                                {{ form_widget(formProduit.description, {'attr': {'class': 'form-control'}}) }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            {{ form_label(formProduit.stock, "Stock : ", {'label_attr': {'class': 'col-sm-3 control-label'}}) }}
+                            <div class="col-sm-9">
+                                {{ form_widget(formProduit.stock, {'attr': {'class': 'form-control entier'}}) }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            {{ form_label(formProduit.prix, "Prix : ", {'label_attr': {'class': 'col-sm-3 control-label'}}) }}
+                            <div class="col-sm-9">
+                                {{ form_widget(formProduit.prix, {'attr': {'class': 'form-control numerique'}}) }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            {{ form_label(formProduit.genres, "Genres : ", {'label_attr': {'class': 'col-sm-3 control-label'}}) }}
+                            <div class="col-sm-9">
+                                {{ form_widget(formProduit.genres, {'attr': {'class': 'form-control'}}) }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            {{ form_label(formProduit.categories, "Catégories : ", {'label_attr': {'class': 'col-sm-3 control-label'}}) }}
+                            <div class="col-sm-9">
+                                {{ form_widget(formProduit.categories, {'attr': {'class': 'form-control'}}) }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            {{ form_label(formProduit.enSolde, "En solde : ", {'label_attr': {'class': 'col-sm-3 control-label'}}) }}
+                            <div style="margin-top: 5px;" class="col-sm-9">
+                                {{ form_widget(formProduit.enSolde, {'attr': {'data-on-text': 'Oui','data-off-text': 'Non','class':'switch'}}) }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            {{ form_label(formProduit.occasion, "Occasion : ", {'label_attr': {'class': 'col-sm-3 control-label'}}) }}
+                            <div style="margin-top: 5px;" class="col-sm-9">
+                                {{ form_widget(formProduit.occasion, {'attr': {'data-on-text': 'Oui','data-off-text': 'Non','class':'switch'}}) }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            {{ form_label(formProduit.isBestProduct, "Meilleur produit : ", {'label_attr': {'class': 'col-sm-3 control-label'}}) }}
+                            <div style="margin-top: 5px;" class="col-sm-9">
+                                {{ form_widget(formProduit.isBestProduct, {'attr': {'data-on-text': 'Oui','data-off-text': 'Non','class':'switch'}}) }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            {{ form_label(formProduit.isNew, "Nouveau : ", {'label_attr': {'class': 'col-sm-3 control-label'}}) }}
+                            <div style="margin-top: 5px;" class="col-sm-9">
+                                {{ form_widget(formProduit.isNew, {'attr': {'data-on-text': 'Oui','data-off-text': 'Non','class':'switch'}}) }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            {{ form_label(formProduit.dateEndNew, "Date fin nouveau : ", {'label_attr': {'class': 'col-sm-3 control-label'}}) }}
+                            <div class="col-sm-9">
+                                {{ form_widget(formProduit.dateEndNew.date) }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            {{ form_label(formProduit.dateEndNew, "Heure : ", {'label_attr': {'class': 'col-sm-3 control-label'}}) }}
+                            <div class="col-sm-9">
+                                {{ form_widget(formProduit.dateEndNew.time) }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            {{ form_label(formProduit.marque, "Marque : ", {'label_attr': {'class': 'col-sm-3 control-label'}}) }}
+                            <div class="col-sm-9">
+                                {{ form_widget(formProduit.marque, {'attr': {'class': 'form-control'}}) }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">Photos : </label>
+                            <div class="col-sm-9">
+                                <button id="add_image" class="btn btn-success"><i class="fa fa-plus-square" aria-hidden="true"></i> Ajouter une photo</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {{ form_widget(formProduit.images) }}
+
+                <div class="form-group">
+                    <button class="btn btn-primary btn-sm pull-right" type="submit"><i class="fa fa-plus-square" aria-hidden="true"></i> Ajouter</button>
+                </div>
+                {{ form_rest(formProduit) }}
+                {{ form_end(formProduit) }}
+
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascript %}
+    <script type="text/javascript" src="{{ asset('js/bootstrap-switch.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/bootstrap-multiselect.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/produits_nouveau.js') }}"></script>
+{% endblock %}

@@ -1,0 +1,434 @@
+<?php
+
+namespace AppBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * Coupon
+ *
+ * @ORM\Table(name="coupon")
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\CouponRepository")
+ */
+class Coupon {
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    private $id;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="libelle", type="string", length=255)
+     */
+    private $libelle;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="code", type="string", length=255, unique=true)
+     */
+    private $code;
+
+    /**
+     * @var bool
+     *
+     * @ORM\Column(name="actif", type="boolean")
+     */
+    private $actif;
+
+    /**
+     * @var bool
+     *
+     * @ORM\Column(name="freeShipping", type="boolean")
+     */
+    private $freeShipping;
+
+    /**
+     * @var bool
+     *
+     * @ORM\Column(name="pourcentage", type="boolean")
+     */
+    private $pourcentage;
+
+    /**
+     * @var bool
+     *
+     * @ORM\Column(name="forAll", type="boolean")
+     */
+    private $forAll;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="dateDebut", type="datetimetz", nullable=true)
+     */
+    private $dateDebut;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="dateFin", type="datetimetz", nullable=true)
+     */
+    private $dateFin;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="montantMin", type="decimal", precision=10, scale=2, nullable=true)
+     */
+    private $montantMin;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="valeur", type="decimal", precision=10, scale=2, nullable=true)
+     */
+    private $valeur;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="montantMax", type="decimal", precision=10, scale=2, nullable=true)
+     */
+    private $montantMax;
+
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     *
+     * @ORM\ManyToMany(targetEntity="Client", mappedBy="coupons")
+     * 
+     */
+    private $clients;
+
+    function __construct() {
+        $this->clients = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    /**
+     * Get id
+     *
+     * @return int
+     */
+    public function getId() {
+        return $this->id;
+    }
+
+    /**
+     * Set libelle
+     *
+     * @param string $libelle
+     *
+     * @return Coupon
+     */
+    public function setLibelle($libelle) {
+        $this->libelle = $libelle;
+
+        return $this;
+    }
+
+    /**
+     * Get libelle
+     *
+     * @return string
+     */
+    public function getLibelle() {
+        return $this->libelle;
+    }
+
+    /**
+     * Set code
+     *
+     * @param string $code
+     *
+     * @return Coupon
+     */
+    public function setCode($code) {
+        $this->code = $code;
+
+        return $this;
+    }
+
+    /**
+     * Get code
+     *
+     * @return string
+     */
+    public function getCode() {
+        return $this->code;
+    }
+
+    /**
+     * Set actif
+     *
+     * @param boolean $actif
+     *
+     * @return Coupon
+     */
+    public function setActif($actif) {
+        $this->actif = $actif;
+
+        return $this;
+    }
+
+    /**
+     * Get actif
+     *
+     * @return bool
+     */
+    public function getActif() {
+        return $this->actif;
+    }
+
+    /**
+     * Set freeShipping
+     *
+     * @param boolean $freeShipping
+     *
+     * @return Coupon
+     */
+    public function setFreeShipping($freeShipping) {
+        $this->freeShipping = $freeShipping;
+
+        return $this;
+    }
+
+    /**
+     * Get freeShipping
+     *
+     * @return bool
+     */
+    public function getFreeShipping() {
+        return $this->freeShipping;
+    }
+
+    /**
+     * Set pourcentage
+     *
+     * @param boolean $pourcentage
+     *
+     * @return Coupon
+     */
+    public function setPourcentage($pourcentage) {
+        $this->pourcentage = $pourcentage;
+
+        return $this;
+    }
+
+    /**
+     * Get pourcentage
+     *
+     * @return bool
+     */
+    public function getPourcentage() {
+        return $this->pourcentage;
+    }
+
+    /**
+     * Set dateDebut
+     *
+     * @param \DateTime $dateDebut
+     *
+     * @return Coupon
+     */
+    public function setDateDebut($dateDebut) {
+        $this->dateDebut = $dateDebut;
+
+        return $this;
+    }
+
+    /**
+     * Get dateDebut
+     *
+     * @return \DateTime
+     */
+    public function getDateDebut() {
+        return $this->dateDebut;
+    }
+
+    /**
+     * Set dateFin
+     *
+     * @param \DateTime $dateFin
+     *
+     * @return Coupon
+     */
+    public function setDateFin($dateFin) {
+        $this->dateFin = $dateFin;
+
+        return $this;
+    }
+
+    /**
+     * Get dateFin
+     *
+     * @return \DateTime
+     */
+    public function getDateFin() {
+        return $this->dateFin;
+    }
+
+    /**
+     * Set montantMin
+     *
+     * @param string $montantMin
+     *
+     * @return Coupon
+     */
+    public function setMontantMin($montantMin) {
+        $this->montantMin = $montantMin;
+
+        return $this;
+    }
+
+    /**
+     * Get montantMin
+     *
+     * @return string
+     */
+    public function getMontantMin() {
+        return $this->montantMin;
+    }
+
+    /**
+     * Set montantMax
+     *
+     * @param string $montantMax
+     *
+     * @return Coupon
+     */
+    public function setMontantMax($montantMax) {
+        $this->montantMax = $montantMax;
+
+        return $this;
+    }
+
+    /**
+     * Get montantMax
+     *
+     * @return string
+     */
+    public function getMontantMax() {
+        return $this->montantMax;
+    }
+
+    /**
+     * Add client
+     *
+     * @param \AppBundle\Entity\Coupon $client
+     *
+     * @return Coupon
+     */
+    public function addClient(\AppBundle\Entity\Coupon $client) {
+        $this->clients[] = $client;
+
+        return $this;
+    }
+
+    /**
+     * Remove client
+     *
+     * @param \AppBundle\Entity\Coupon $client
+     */
+    public function removeClient(\AppBundle\Entity\Coupon $client) {
+        $this->clients->removeElement($client);
+    }
+
+    /**
+     * Get clients
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getClients() {
+        return $this->clients;
+    }
+
+    /**
+     * Set valeur
+     *
+     * @param string $valeur
+     *
+     * @return Coupon
+     */
+    public function setValeur($valeur) {
+        $this->valeur = $valeur;
+
+        return $this;
+    }
+
+    /**
+     * Get valeur
+     *
+     * @return string
+     */
+    public function getValeur() {
+        return $this->valeur;
+    }
+
+    function getChar() {
+        return $this->pourcentage ? "%" : "DH";
+    }
+
+    /**
+     * Set forAll
+     *
+     * @param boolean $forAll
+     *
+     * @return Coupon
+     */
+    public function setForAll($forAll) {
+        $this->forAll = $forAll;
+
+        return $this;
+    }
+
+    /**
+     * Get forAll
+     *
+     * @return boolean
+     */
+    public function getForAll() {
+        return $this->forAll;
+    }
+
+    function isValidForUser(Client $client) {
+        if ($this->forAll)
+            return true;
+        else {
+            foreach ($this->clients as $c) {
+                if ($c->getId() === $client->getId())
+                    return true;
+            }
+        }
+        return false;
+    }
+
+    function isValidForTotal($total) {
+        if (!is_null($this->montantMin) and $total < $this->montantMin)
+            return false;
+        elseif (!is_null($this->montantMax) and $total > $this->montantMax)
+            return false;
+        else
+            return true;
+    }
+
+    function isValid($total, Client $client) {
+        if (!$this->isValidForUser($client))
+            return false;
+        if (!$this->isValidForTotal($total))
+            return false;
+        if (!is_null($this->dateDebut) and $this->dateDebut > new \DateTime())
+            return false;
+        if (!is_null($this->dateFin) and $this->dateFin < new \DateTime())
+            return false;
+        if (!$this->actif)
+            return false;
+        return true;
+    }
+
+}

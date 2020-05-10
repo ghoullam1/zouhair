@@ -1,0 +1,159 @@
+{% extends "layout_admin.html.twig" %}
+{% set item = "commandes" %}
+{% block title %}Commandes - {{ commande.reference }}{% endblock %}
+
+
+{% block breadcrumb %}
+    <li><a href="{{ path('app_admin_index') }}">Administration</a></li>
+    <li><a href="{{ path('app_admin_commandes') }}">Commandes</a></li>
+    <li class="active">{{ commande.reference }}</li>
+    {% endblock %}
+
+{% block contenu %}
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="well well-ws-inc">
+                <legend><i class="fa fa-id-card-o" aria-hidden="true"></i> Client</legend>
+                <div class="table-responsive">
+                    <table class="table table-condensed">
+                        <tbody>
+                            <tr>
+                                <td>Nom et prénom</td>
+                                <td>{{ commande.client.nom ~ ' ' ~ commande.client.prenom }}</td>
+                            </tr>
+                            <tr>
+                                <td>Email</td>
+                                <td>{{ commande.client.email }}</td>
+                            </tr>
+                            <tr>
+                                <td>GSM</td>
+                                <td>{{ commande.client.gsm }}</td>
+                            </tr>
+                            <tr>
+                                <td>Ville</td>
+                                <td>{{ commande.client.ville.nom }}</td>
+                            </tr>
+                            <tr>
+                                <td>Adresse</td>
+                                <td>{{ commande.client.adresse }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="well well-ws-inc">
+                <legend><i class="fa fa-tags" aria-hidden="true"></i> Historique</legend>
+                <div class="table-responsive">
+                    <table class="table table-condensed">
+                        <tbody>
+                            {% for h in commande.historiques %}
+                                <tr>
+                                    <td>{{ h.dateStatut|date('d/m/Y H:i') }}</td>
+                                    <td>{{ h.statut.libelle }} {% if loop.first %}<span class="label label-success pull-right">Active</span>{% endif %}</td>
+                                </tr>
+                            {% endfor %}
+                            <tr>
+                                <td>Date Commande</td>
+                                <td>{{ commande.dateCommande|date('d/m/Y H:i') }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                {% if statutsCommande|length > 0 %}
+                    <div class="well well-ws">
+                        <legend><i class="fa fa-plus-square" aria-hidden="true"></i> Ajouter un statut</legend>
+                        <form class="form-horizontal" method="POST" id="add_statut" name="add_statut" data-parsley-validate>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">Statut</label>
+                                <div class="col-sm-9">
+                                    <select name="statut" id="statut" class="form-control" required="">
+                                        {% for s in statutsCommande %}
+                                            <option value="{{ s.id }}">{{ s.libelle }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <button class="btn btn-primary btn-sm pull-right" type="submit"><i class="fa fa-plus-square" aria-hidden="true"></i> Ajouter</button>
+                            </div>
+                        </form>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="well well-ws-inc">
+                <legend><i class="fa fa-thumb-tack" aria-hidden="true"></i> Détails Commande</legend>
+                <div class="table-responsive">
+                    <table class="table table-condensed">
+                        <thead>
+                            <tr>
+                                <th>Référence</th>
+                                <th>Titre</th>
+                                <th class="text-center">Couleur</th>
+                                <th class="text-center">Taille</th>
+                                <th class="text-center">Prix unitaire</th>
+                                <th class="text-center">Quantité</th>
+                                <th class="text-center">Sous total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for pc in commande.produits %}
+                                <tr>
+                                    <td>{{ pc.produit.reference }}</td>
+                                    <td>{{ pc.produit.titre }}</td>
+                                    <td>
+                                        {% if pc.variation is not null and pc.variation.couleur is not null %}
+                                            <div style="background-color: {{ pc.variation.couleur.code }};" class="divColor"></div>
+                                        {% endif %}
+                                    </td>
+                                    <td class="text-center">
+                                        {% if pc.variation is not null and pc.variation.taille is not null %}
+                                            <span class="label label-info">{{ pc.variation.taille.code }}</span>
+                                        {% endif %}
+                                    </td>
+                                    <td class="text-center">{{ pc.prixUnitaire|number_format(2,'.',' ') }} DH</td>
+                                    <td class="text-center">{{ pc.quantite }}</td>
+                                    <td class="text-center">{{ pc.sousTotal|number_format(2,'.',' ') }} DH</td>
+                                </tr>
+                            {% endfor %}
+                            <tr style="font-weight: bold;">
+                                <td colspan="6" class="text-right">Sous Total Panier</td>
+                                <td class="text-center">{{ commande.sousTotal|number_format(2,'.',' ') }}DH</td>
+                            </tr>
+                            {% if commande.modeLivraison is not null %}
+                                <tr>
+                                    <td><i class="fa fa-truck" aria-hidden="true"></i> Livraison</td>
+                                    <td colspan="5">{{ commande.modeLivraison.ville.nom }} - {{ commande.modeLivraison.libelle }}</td>
+                                    <td style="color:green;" class="text-center">+ {{ commande.fraisLivraison|number_format(2,'.',' ') }} DH</td>
+                                </tr>
+                            {% endif %}
+                            {% if commande.coupon is not null %}
+                                <tr>
+                                    <td><i class="fa fa-gift" aria-hidden="true"></i> Bon de réduction</td>
+                                    {% if commande.coupon.freeShipping %}
+                                        <td colspan="6" class="text-right"><b>Livraison Gratuite</b></td>
+                                            {% else %}
+                                        <td colspan="5">{{ commande.coupon.libelle }} <span class="label label-success">- {{ commande.coupon.valeur }} {{ commande.coupon.char }}</span> </td>
+                                        <td style="color:red;" class="text-center">- {{ commande.remise|number_format(2,'.',' ') }} DH</td>
+                                    {% endif %}
+                                </tr>
+                            {% endif %}
+                            <tr>
+                            <tr style="font-weight: bold;background-color: lavender;">
+                                <td colspan="6" class="text-right">Total</td>
+                                <td class="text-center">{{ commande.total|number_format(2,'.',' ') }}DH</td>
+                            </tr>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>  
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,109 @@
+{% extends "layout_admin.html.twig" %}
+{% set item = "categories" %}
+{% block title %}Catégories{% endblock %}
+
+
+{% block breadcrumb %}
+    <li><a href="{{ path('app_admin_index') }}">Administration</a></li>
+    <li class="active">Catégories</li>
+    {% endblock %}
+
+{% block stylesheet %}
+    <link rel="stylesheet" type="text/css" href="{{ asset('css/bootstrap-multiselect.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ asset('css/categories.css') }}" />
+{% endblock %}
+
+{% block contenu %}
+    {% macro treeviewCategories(categories) %}
+        {% for key, categorie in categories %}
+            <li class="dd-item dd3-item" data-id="{{ categorie.id }}" >
+                <div class="dd-handle dd3-handle">drag</div> 
+                <div class="dd3-content">
+                    {{ categorie.libelle }} <strong>( {{ categorie.produits |length }} Produits)</strong><a style="color: red;" class="pull-right" href="{{ path('app_admin_categories_remove',{'slug':categorie.slug}) }}"><i class="fa fa-times" title="Supprimer" ></i></a> <a style="margin-right: 5px;" class="pull-right" href="{{ path('app_admin_categories_edit',{'slug':categorie.slug}) }}"><i class="fa fa-pencil-square-o" title="Modifier" ></i></a>
+                </div>
+                {% if categorie.genres()|length > 0 %}
+                    <ol class="dd-list" data-parent="{{ categorie.id }}">
+                        {% import _self as macro %}
+                        {{ macro.treeviewGenre(categorie.genres()) }}
+                    </ol>
+                {% endif %}
+            </li>
+        {% endfor %}
+    {% endmacro %}
+
+    {% macro treeviewGenre(genres) %}
+        {% for key, genre in genres %}
+            <il class="dd-item" data-id="{{ genre.id }}" >
+                <div class="dd-genre">
+                    {{ genre.libelle }}
+                </div> 
+            </il>
+        {% endfor %}
+    {% endmacro %}
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="well well-ws-inc">
+                <legend><i class="fa fa-list" aria-hidden="true"></i> Liste Catégories</legend>
+                {% if categories|length > 0 %}
+                    <div class="text-center" style="margin-bottom: 20px;">
+                        <button type="button" id="derouler" class="btn btn-primary btn-sm">Dérouler</button> <button type="button" id="fermer" class="btn btn-default btn-sm">Fermer</button>
+                    </div>
+                    <div class="dd" id="treeview">
+                        <ol class="dd-list">
+                            {% import _self as html %}
+                            {{ html.treeviewCategories(categories) }}
+                        </ol>
+                    </div>
+                    <input   type="hidden" id="nestable-output" />
+                    <div style="margin-top: 10px;margin-bottom: 30px;">
+                        <button data-loading-text='<i class="fa fa-spinner" aria-hidden="true"></i> Veuillez patienter' id="save-order" class="btn btn-sm btn-primary pull-right"><i class="fa fa-floppy-o" aria-hidden="true"></i> Enregistrer l'ordre</button>
+                    </div>
+                {% else %}
+                    <div class="alert alert-info">
+                        <p><strong>Aucune catégorie enregistrée.</strong>Veuillez utiliser le formulaire d'ajout pour enregistrer des nouvelles catégories.</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="well well-ws-inc">
+                <legend><i class="fa fa-plus-square" aria-hidden="true"></i> Nouvelle Catégorie</legend>
+                {{ form_start(formCat,{'attr':{'class':'form-horizontal','enctype':'multipart/form-data','method':'POST','data-parsley-validate':''}}) }}
+                {{ form_errors(formCat) }}
+
+                <div class="form-group">
+                    {{ form_label(formCat.libelle, "Libellé : ", {'label_attr': {'class': 'col-sm-3 control-label'}}) }}
+                    <div class="col-sm-9">
+                        {{ form_widget(formCat.libelle, {'attr': {'class': 'form-control'}}) }}
+                    </div>
+                </div>
+                <div class="form-group">
+                    {{ form_label(formCat.genres, "Genres : ", {'label_attr': {'class': 'col-sm-3 control-label'}}) }}
+                    <div class="col-sm-9">
+                        {{ form_widget(formCat.genres, {'attr': {'class': 'form-control'}}) }}
+                    </div>
+                </div>
+                <div class="form-group">
+                    {{ form_label(formCat.image, "Image : ", {'label_attr': {'class': 'col-sm-3 control-label'}}) }}
+                    <div class="col-sm-9">
+                        <button class="btn btn-primary btn-sm" id="bind_img">Choisir une photo <i class='fa fa-paperclip'></i></button>
+                        {{ form_widget(formCat.image, {'attr': {'style':'display: none;'}}) }}
+                    </div>
+                </div>
+                <div class="form-group">
+                    <button class="btn btn-primary btn-sm pull-right" type="submit"><i class="fa fa-plus-square" aria-hidden="true"></i> Ajouter</button>
+                </div>
+
+                {{ form_rest(formCat) }}
+                {{ form_end(formCat) }}
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascript %}
+    <script type="text/javascript" src="{{ asset('js/jquery.nestable.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/bootstrap-multiselect.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/categories.js') }}"></script>
+{% endblock %}

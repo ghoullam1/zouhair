@@ -1,0 +1,153 @@
+{% extends "layout_front.html.twig" %}
+{% block title %}Mon compte{% endblock %}
+
+
+
+{% block style %}
+    <style type="text/css">
+        .nav-tabs-ws{
+            background: #fff none repeat scroll 0 0;
+            margin: 30px 0 10px 0;
+        }
+        .nav-tabs-ws li a{
+            color: black;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+        .nav-tabs-ws li a:hover{
+            color: white;
+            background-color: #dc3545;
+        }
+        .nav-tabs-ws li.active a,.nav-tabs-ws li.active a:hover,.nav-tabs-ws li.active a:focus{
+            color: white;
+            background-color: #dc3545;
+        }
+
+    </style>
+{% endblock %}
+
+{% block contenu %}
+    <div class="page-title fix"><!--Start Title-->
+        <div class="overlay section">
+            <h2>Mon compte</h2>
+        </div>
+    </div><!--End Title-->
+    <div class="container">
+        <div class="row">
+            <div>
+
+                <!-- Nav tabs -->
+                <ul class="nav nav-tabs nav-tabs-ws" role="tablist">
+                    <li role="presentation" {% if app.request.get('page') is null %}class="active"{% endif %}><a href="#profil" aria-controls="profil" role="tab" data-toggle="tab">Mon profil</a></li>
+                    <li role="presentation" {% if app.request.get('page') is not null %}class="active"{% endif %}><a href="#commandes" aria-controls="commandes" role="tab" data-toggle="tab">Mes commandes</a></li>
+                </ul>
+
+                <!-- Tab panes -->
+                <div class="tab-content">
+                    <div role="tabpanel" class="tab-pane {% if app.request.get('page') is null %}active{% endif %}" id="profil">
+                        <div class="row">
+                            <h4 style="margin-left: 30px;">Modifier vos information personnel</h4>
+
+                            <div class="col-md-6 col-md-offset-3">
+                                <div class="login">
+                                    {{ form_start(formClient,{'attr':{'id':'signup-form','method':'POST','data-parsley-validate':''}}) }}
+                                    {% spaceless %}
+                                        {% if not formClient.vars.valid %}
+                                            <div class="alert alert-danger">
+                                                {{ form_errors(formClient) }}
+                                                <ul>
+                                                    {% for children in formClient.children %}
+                                                        {% if not children.vars.valid %}
+                                                            <li> {{ form_errors(children) }}</li>
+                                                            {% endif %}
+                                                        {% endfor %}
+                                                </ul>
+                                            </div>
+                                        {% endif %}
+                                    {% endspaceless %}
+
+                                    <label for="appbundle_client_image_file">Photo</label>
+                                    <img  style="max-width: 150px;" class="img-thumbnail" id="show_img" {% if app.user.image is not null %} src="{{ image('images/upload/' ~ app.user.image.fullName).resize(200,200) }}" {% else %} src="{{ image('notFound').resize(200,200) }}" {% endif %} />
+                                    <br/>
+                                    <button {% if app.user.image is null %} style="display: none;" {% endif%} class="btn btn-link btn-sm" id="deleteImage"><i class="fa fa-trash-o" aria-hidden="true"></i> Supprimer la photo</button>
+                                    <button {% if app.user.image is not null %} style="display: none;" {% endif%} class="btn btn-link btn-sm" id="bind_img"><i class='fa fa-paperclip'></i> Choisir une photo</button>
+
+
+                                    {{ form_widget(formClient.image, {'attr': {'style':'display: none;'}}) }}
+                                    <label for="appbundle_client_nom">Nom</label>
+                                    {{ form_widget(formClient.nom, {'attr': {}}) }}
+                                    <label for="appbundle_client_prenom">Prénom</label>
+                                    {{ form_widget(formClient.prenom, {'attr': {}}) }}
+                                    <label for="appbundle_client_email">Email<span>*</span></label>
+                                    {{ form_widget(formClient.email, {'attr': {}}) }}
+                                    <label for="appbundle_client_gsm">GSM</label>
+                                    {{ form_widget(formClient.gsm, {'attr': {'class':'phone'}}) }}
+                                    <label for="appbundle_client_ville">Ville</label>
+                                    {{ form_widget(formClient.ville, {'attr': {}}) }}
+                                    <label for="appbundle_client_adresse">Adresse</label>
+                                    {{ form_widget(formClient.adresse, {'attr': {'rows':'4'}}) }}
+                                    <input type="hidden" id="check_image" name="check_image" />
+                                    <input type="submit" value="Enregistrer" />
+                                    {{ form_rest(formClient) }}
+                                    {{ form_end(formClient) }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div role="tabpanel" class="tab-pane {% if app.request.get('page') is not null %}active{% endif %}" id="commandes">
+                        <h4 style="margin-bottom: 20px;">Liste des commandes</h4>
+                        <div class="table-responsive">
+                            <table class="table table-condensed">
+                                <thead>
+                                    <tr>
+                                        <th>Reference</th>
+                                        <th>Date commande</th>
+                                        <th class="text-center">Remise</th>
+                                        <th>Mode livraison</th>
+                                        <th class="text-center">Frais de livraison</th>
+                                        <th class="text-center">Totale</th>
+                                        <th>Statut</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for commande in pagination %}
+                                        <tr>
+                                            <td>{{ commande.reference }}</td>
+                                            <td>{{ commande.dateCommande|date('d/m/Y - H:i') }}</td>
+                                            <td class="text-center">{{ commande.remise ? commande.remise|number_format(2,'.',' ') ~ ' DH' : '' }}</td>
+                                            <td>{{ commande.modeLivraison ? commande.modeLivraison.libelle : '' }}</td>
+                                            <td class="text-center">{{ commande.fraisLivraison ? commande.fraisLivraison|number_format(2,'.',' ') ~ ' DH' : '' }}</td>
+                                            <td class="text-center">{{ commande.total|number_format(2,'.',' ') ~ ' DH' }}</td>
+                                            <td>{{ commande.lastStatut ? commande.lastStatut.libelle : '' }}</td>
+                                            <td class="text-center"><a class="btn btn-link" href="{{ path('app_front_compte_commande',{'reference':commande.reference}) }}">Détails</a></td>
+                                        </tr>
+                                    {% endfor %}
+                                    {% if pagination|length == 0 %}
+                                        <tr>
+                                            <td colspan="8">
+                                                <div class="alert alert-info">
+                                                    <p>Votre liste de commandes est vide!</p>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    {% endif %}
+                                </tbody>
+                            </table>
+                            <div class="pagination">
+                                {{ knp_pagination_render(pagination) }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+
+{% endblock %}
+{% block javascript %}
+    <script type="text/javascript" src="{{ asset('front/js/compte.js') }}"></script>
+{% endblock %}

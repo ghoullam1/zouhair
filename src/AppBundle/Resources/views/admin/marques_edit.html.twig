@@ -1,0 +1,63 @@
+{% extends "layout_admin.html.twig" %}
+{% set item = "marques" %}
+{% block title %}Marques : {{ marque.nom }}{% endblock %}
+
+
+{% block breadcrumb %}
+    <li><a href="{{ path('app_admin_index') }}">Administration</a></li>
+    <li><a href="{{ path('app_admin_marques') }}">Marques</a></li>
+    <li class="active">{{ marque.nom }}</li>
+    {% endblock %}
+
+{% block stylesheet %}
+    <link rel="stylesheet" type="text/css" href="{{ asset('css/bootstrap-multiselect.css') }}" />
+{% endblock %}
+
+{% block contenu %}
+
+    <div class="row">
+        <div class="col-md-6 col-md-offset-3">
+            <div class="well well-ws-inc">
+                <legend><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Modifier Marque ({{ marque.nom }})</legend>
+                {{ form_start(formMarque,{'attr':{'class':'form-horizontal','enctype':'multipart/form-data','method':'POST','data-parsley-validate':''}}) }}
+                {{ form_errors(formMarque) }}
+
+                <div class="form-group">
+                    {{ form_label(formMarque.nom, "Nom : ", {'label_attr': {'class': 'col-sm-3 control-label'}}) }}
+                    <div class="col-sm-9">
+                        {{ form_widget(formMarque.nom, {'attr': {'class': 'form-control'}}) }}
+                    </div>
+                </div>
+                <div class="form-group">
+                    {{ form_label(formMarque.categories, "Catégories : ", {'label_attr': {'class': 'col-sm-3 control-label'}}) }}
+                    <div class="col-sm-9">
+                        {{ form_widget(formMarque.categories, {'attr': {'class': 'form-control'}}) }}
+                    </div>
+                </div>
+                <div class="form-group">
+                    {{ form_label(formMarque.image, "Image : ", {'label_attr': {'class': 'col-sm-3 control-label'}}) }}
+                    <div class="col-sm-9">
+                        <button class="btn btn-primary btn-sm" id="bind_img"><i class='fa fa-paperclip'></i> Choisir une photo</button>
+                        {{ form_widget(formMarque.image, {'attr': {'style':'display: none;'}}) }}
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-9 col-sm-offset-3">
+                        <img class="img-responsive img-thumbnail" id="show_img"  src="{{ path('app_image',{'nom':marque.image.nom}) }}" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <button class="btn btn-primary btn-sm pull-right" type="submit"><i class="fa fa-floppy-o" aria-hidden="true"></i> Enregistrer</button>
+                </div>
+                <input type="hidden" id="check_image" name="check_image" />
+                {{ form_rest(formMarque) }}
+                {{ form_end(formMarque) }}
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascript %}
+    <script type="text/javascript" src="{{ asset('js/bootstrap-multiselect.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/marques_edit.js') }}"></script>
+{% endblock %}

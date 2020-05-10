@@ -1,0 +1,31 @@
+/* 
+    Created on : 15 nov. 2016, 00:39:59
+    Author     : abdelhak
+*/
+
+.well-ws{
+    background-color: white;
+}
+.parsley-errors-list{
+    list-style: none;
+    margin-bottom: -10px;
+}
+.parsley-errors-list li{
+    color: red;
+}
+
+.well-ws-inc{
+    background-color: ghostwhite;
+}
+
+.divColor{
+    width: 20px;
+    height: 20px;
+    border: black 1px solid;
+    border-radius: 50%;
+    margin: auto;
+}
+
+.text-middle{
+    vertical-align: middle;
+}

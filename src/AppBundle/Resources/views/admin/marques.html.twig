@@ -1,0 +1,98 @@
+{% extends "layout_admin.html.twig" %}
+{% set item = "marques" %}
+{% block title %}Marques{% endblock %}
+
+
+{% block breadcrumb %}
+    <li><a href="{{ path('app_admin_index') }}">Administration</a></li>
+    <li class="active">Marques</li>
+    {% endblock %}
+
+{% block stylesheet %}
+    <link rel="stylesheet" type="text/css" href="{{ asset('css/bootstrap-multiselect.css') }}" />
+{% endblock %}
+
+{% block contenu %}
+    <div class="row">
+        <div class="col-md-6">
+            <div class="well well-ws-inc">
+                <legend><i class="fa fa-list" aria-hidden="true"></i> Liste Marques</legend>
+                {% if pagination|length > 0 %}
+                    <div class="table-responsive">
+                        <table class="table table-condensed">
+                            <thead>
+                                <tr>
+
+                                    <th>Nom</th>
+                                    <th class="text-center">Produit</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for marque in pagination %}
+                                    <tr>
+                                        <td>{{ marque.nom }}</td>
+                                        <td class="text-center">{{ marque.produits|length }}</td>
+                                        <td class="text-center"><a class="btn btn-sm btn-primary" href="{{ path('app_admin_marques_edit',{'id':marque.id}) }}" style="margin: 5px;"><i class="fa fa-pencil-square-o" title="Modifier" ></i></a><a style="margin: 5px;" class="btn btn-sm btn-danger" href="{{ path('app_admin_marques_remove',{'id':marque.id}) }}"><i title="Supprimer" class="fa fa-trash-o" aria-hidden="true"></i></a></td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <th colspan="3">
+                                        {# display navigation #}
+                                        <div class="navigation text-center">
+                                            {{ knp_pagination_render(pagination) }}
+                                        </div>
+                                    </th>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                {% else %}
+                    <div class="alert alert-info">
+                        <p><strong>Aucune marque enregistrée.</strong>Veuillez utiliser le formulaire d'ajout pour enregistrer des nouvelles marques.</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="well well-ws-inc">
+                <legend><i class="fa fa-plus-square" aria-hidden="true"></i> Nouvelle Marque</legend>
+                {{ form_start(formMarque,{'attr':{'class':'form-horizontal','enctype':'multipart/form-data','method':'POST','data-parsley-validate':''}}) }}
+                {{ form_errors(formMarque) }}
+
+                <div class="form-group">
+                    {{ form_label(formMarque.nom, "Nom : ", {'label_attr': {'class': 'col-sm-3 control-label'}}) }}
+                    <div class="col-sm-9">
+                        {{ form_widget(formMarque.nom, {'attr': {'class': 'form-control'}}) }}
+                    </div>
+                </div><br/>
+                <div class="form-group">
+                    {{ form_label(formMarque.categories, "Catégories : ", {'label_attr': {'class': 'col-sm-3 control-label'}}) }}
+                    <div class="col-sm-9">
+                        {{ form_widget(formMarque.categories, {'attr': {'class': 'form-control'}}) }}
+                    </div>
+                </div><br/>
+                <div class="form-group">
+                    {{ form_label(formMarque.image, "Image : ", {'label_attr': {'class': 'col-sm-3 control-label'}}) }}
+                    <div class="col-sm-9">
+                        <button class="btn btn-primary btn-sm" id="bind_img">Choisir une photo <i class='fa fa-paperclip'></i></button>
+                        {{ form_widget(formMarque.image, {'attr': {'style':'display: none;'}}) }}
+                    </div>
+                </div><br/>
+                <div class="form-group">
+                    <button class="btn btn-primary btn-sm pull-right" type="submit"><i class="fa fa-plus-square" aria-hidden="true"></i> Ajouter</button>
+                </div>
+
+                {{ form_rest(formMarque) }}
+                {{ form_end(formMarque) }}
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascript %}
+    <script type="text/javascript" src="{{ asset('js/bootstrap-multiselect.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/marques.js') }}"></script>
+{% endblock %}

@@ -1,0 +1,25 @@
+{% extends "layout_front.html.twig" %}
+{% set hideCart = true %}
+{% block title %}Panier Détails{% endblock %}
+
+
+
+{% block contenu %}
+
+    <div class="page-title fix"><!--Start Title-->
+        <div class="overlay section">
+            <h2>Panier</h2>
+        </div>
+    </div><!--End Title-->
+    <section class="cart-page page fix"><!--Start Cart Area-->
+        <div class="container">
+            <div class="row cart-details">
+                {% include 'AppBundle:front:inc_panier_details.html.twig' with {'panier': panier} %}
+            </div>
+        </div>
+    </section>
+
+{% endblock %}
+{% block javascript %}
+    <script type="text/javascript" src="{{ asset('front/js/panier.js') }}"></script>
+{% endblock %}

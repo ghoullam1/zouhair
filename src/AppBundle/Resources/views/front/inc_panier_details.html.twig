@@ -1,0 +1,83 @@
+<div class="col-sm-12">
+    <div class="table-responsive">
+        <table id="cart-table" class="table cart-table">
+            <thead class="table-title">
+                <tr>
+                    <th class="produ">PRODUIT</th>
+                    <th class="namedes">TITRE / RÉFÉRENCE</th>
+                    <th class="unit">PRIX UNITAIRE</th>
+                    <th class="quantity">QUANTITE</th>
+                    <th class="valu">SOUS TOTAL</th>
+                    <th class="acti">ACTION</th>
+                </tr>													
+            </thead>
+            <tbody>
+                {% if panier.items|length > 0 %}
+                    {% for item in panier.items %}
+                        <tr class="table-info">
+                            <td class="produ">
+                                <a href="{{ path('app_front_produits_details',{'reference':item.reference}) }}"><img alt="" src="{{ image('images/upload/' ~ item.image).resize(140,113) }}"></a>
+                            </td>
+                            <td class="namedes">
+                                <h2><a href="{{ path('app_front_produits_details',{'reference':item.reference}) }}">{{ item.titre }}</a></h2>
+                                <p style="font-weight: bold;">{{ item.reference }}</p>
+                                {% if item.couleur is not null %}
+                                    <p><span >Couleur : </span> <span style="font-weight: bold;">{{ item.couleur.nom }}</span></p>
+                                    {% endif %}
+                                    {% if item.taille is not null %}
+                                    <p ><span>Taille : </span><span style="font-weight: bold;">{{ item.taille.nom }}</span></p>
+                                    {% endif %}
+                            </td>
+                            <td class="unit">
+                                <h5>{{ item.prix|number_format(2,'.',' ') }} DH</h5>
+                            </td>
+                            <td class="quantity">
+                                <div id="cart-qte" data-reference="{{ item.reference }}" data-couleur="{{ item.couleur ? item.couleur.code : '' }}" data-taille="{{ item.taille ? item.taille.code : '' }}" class="cart-plus-minus">
+                                    <div data-loading-text='<i class="fa fa-spinner fa-spin" aria-hidden="true"></i>' data-url="{{ path('app_front_panier_dec') }}" class="dec qtybutton">-</div>
+                                    <input readonly="" type="text" value="{{ item.quantite }}" name="qtybutton" class="cart-plus-minus-box">
+                                    <div data-loading-text='<i class="fa fa-spinner fa-spin" aria-hidden="true"></i>' data-url="{{ path('app_front_panier_inc') }}" class="inc qtybutton">+</div>
+                                </div>
+                            </td>
+                            <td class="valu">
+                                <h5>{{ item.sousTotal|number_format(2,'.',' ') }} DH</h5>
+                            </td>
+                            <td class="acti">
+                                <a class="delete-produit" style="cursor: pointer;" data-couleur="{{ item.couleur ? item.couleur.code : '' }}" data-taille="{{ item.taille ? item.taille.code : '' }}" data-reference="{{ item.reference }}" data-url="{{ path('app_front_panier_remove') }}"><i class="fa fa-trash-o"></i></a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr>
+                        <td colspan="6">
+                            <div class="alert alert-info">
+                                <p>Votre panier d'achats est vide !</p>
+                            </div>
+                        </td>
+                    </tr>
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+</div>
+<div class="col-sm-6 col-md-7">
+    <div class="coupon">
+        <a href="{{ path('app_front_index') }}">CONTINUER VOS ACHATS</a>
+        <h3>LE CODE DE COUPON DE RÉDUCTION</h3>
+        <input id="code-coupon" type="text" {% if panier.coupon is null %} placeholder="REMISE CODE PROMO ICI..."{% else %} placeholder="{{ panier.couponToString }}" readonly=""{% endif %} />
+        {% if panier.coupon is null %}
+            <a class="coupon-link" style="cursor: pointer;" data-url="{{ path('app_front_panier_coupon_add') }}" data-loading-text="Veuillez patienter <i class='fa fa-spinner fa-spin' aria-hidden='true'></i>" id="add-coupon">Appliquer Coupon</a>
+        {% else %}
+            <a class="coupon-link" style="cursor: pointer;" data-url="{{ path('app_front_panier_coupon_remove') }}" data-loading-text="Veuillez patienter <i class='fa fa-spinner fa-spin' aria-hidden='true'></i>" id="remove-coupon">Enlever Coupon</a>
+        {% endif %}
+        <p><span>NOTE :</span> Expédition est estimée et mis à jour lors de la validation basée sur votre facturation et les informations d’expédition.</p>
+    </div>
+</div>
+<div class="col-sm-6 col-md-5">
+    <div class="proceed fix">
+        <a style="cursor: pointer;" data-url="{{ path('app_front_panier_clear') }}" data-loading-text="Veuillez patienter <i class='fa fa-spinner fa-spin' aria-hidden='true'></i>" id="clear-cart">VIDER LE PANIER</a>
+        <div class="total">
+            <h6>SOUS TOTAL <span>{{ panier.sousTotal|number_format(2, '.', ' ') }} DH</span></h6>
+        </div>
+        <a id="procedto" href="{{ path('app_front_checkout') }}">VALIDER LA COMMANDE</a>
+    </div>
+</div>

@@ -1,0 +1,94 @@
+{% extends "layout_admin.html.twig" %}
+{% set item = "villes_ml" %}
+{% set sousItem = "mode_livraison" %}
+
+{% block title %}Modes de livraison{% endblock %}
+
+
+{% block breadcrumb %}
+    <li><a href="{{ path('app_admin_index') }}">Administration</a></li>
+    <li class="active">Mode de livraison</li>
+    {% endblock %}
+
+{% block contenu %}
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="well well-ws-inc">
+                <legend><i class="fa fa-list" aria-hidden="true"></i> Liste Modes Livraison</legend>
+                {% if pagination|length > 0 %}
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Libellé</th>
+                                    <th>Frais</th>
+                                    <th>Ville</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for mode in pagination %}
+                                    <tr>
+                                        <td>{{ mode.libelle }}</td>
+                                        <td>{{ mode.fraisLivraison|number_format(2, '.', ',') }} DH</td>
+                                        <td>{{ mode.ville.nom }}</td>
+                                        <td><a class="btn btn-sm btn-primary pull-right" href="{{ path('app_admin_modes_livraison_edit',{'id':mode.id}) }}" style="margin: 5px;"><i class="fa fa-pencil-square-o" title="Modifier" ></i></a><a style="margin: 5px;" class="btn btn-sm btn-danger pull-right" href="{{ path('app_admin_modes_livraison_remove',{'id':mode.id}) }}"><i title="Supprimer" class="fa fa-trash-o" aria-hidden="true"></i></a></td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                            <tfoot>
+                            <tr>
+                                <th colspan="4">
+                                    {# display navigation #}
+                                    <div class="navigation text-center">
+                                        {{ knp_pagination_render(pagination) }}
+                                    </div>
+                                </th>
+                            </tr>
+                            </tfoot>
+                        </table>
+                    </div>                   
+                {% else %}
+                    <div class="alert alert-info">
+                        <p><strong>Aucun mode de livraison enregistrée.</strong>Veuillez utiliser le formulaire d'ajout pour enregistrer des nouveaux mode de livraison.</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="well well-ws-inc">
+                <legend><i class="fa fa-plus-square" aria-hidden="true"></i> Nouveau Mode Livraison</legend>
+                {{ form_start(formMode,{'attr':{'class':'form-horizontal','method':'POST','data-parsley-validate':''}}) }}
+                {{ form_errors(formMode) }}
+
+                <div class="form-group">
+                    {{ form_label(formMode.libelle, "Libellé : ", {'label_attr': {'class': 'col-sm-3 control-label'}}) }}
+                    <div class="col-sm-9">
+                        {{ form_widget(formMode.libelle, {'attr': {'class': 'form-control'}}) }}
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    {{ form_label(formMode.fraisLivraison, "Frais : ", {'label_attr': {'class': 'col-sm-3 control-label'}}) }}
+                    <div class="col-sm-9">
+                        {{ form_widget(formMode.fraisLivraison, {'attr': {'class': 'form-control numerique'}}) }}
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    {{ form_label(formMode.ville, "Ville : ", {'label_attr': {'class': 'col-sm-3 control-label'}}) }}
+                    <div class="col-sm-9">
+                        {{ form_widget(formMode.ville, {'attr': {'class': 'form-control'}}) }}
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <button class="btn btn-primary btn-sm pull-right" type="submit"><i class="fa fa-plus-square" aria-hidden="true"></i> Ajouter</button>
+                </div>
+                {{ form_rest(formMode) }}
+                {{ form_end(formMode) }}
+            </div>
+        </div>
+    </div>
+{% endblock %}

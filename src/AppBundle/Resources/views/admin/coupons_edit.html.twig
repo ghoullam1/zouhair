@@ -1,0 +1,159 @@
+{% extends "layout_admin.html.twig" %}
+{% set item = "coupons" %}
+{% block title %}Bons Réduction : {{ coupon.libelle }}{% endblock %}
+
+
+{% block breadcrumb %}
+    <li><a href="{{ path('app_admin_index') }}">Administration</a></li>
+    <li><a href="{{ path('app_admin_coupons') }}">Bons Réduction</a></li>
+    <li class="active">{{ coupon.libelle }}</li>
+    {% endblock %}
+
+{% block stylesheet %}
+    <link rel="stylesheet" type="text/css" href="{{ asset('css/bootstrap-switch.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ asset('css/bootstrap-multiselect.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ asset('css/dataTables.bootstrap.min.css') }}" />
+    <link rel="stylesheet" media="all" type="text/css" href="{{ asset('css/jquery-ui-timepicker-addon.min.css') }}" />
+{% endblock %}
+
+{% block contenu %}
+
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="well well-ws-inc">
+                <legend><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Modifier Bon Réduction ({{ coupon.libelle }})</legend>
+                {{ form_start(formCoupon,{'attr':{'class':'form-horizontal','method':'POST','data-parsley-validate':''}}) }}
+                {{ form_errors(formCoupon) }}
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            {{ form_label(formCoupon.libelle, "Libellé : ", {'label_attr': {'class': 'col-sm-3 control-label'}}) }}
+                            <div class="col-sm-9">
+                                {{ form_widget(formCoupon.libelle, {'attr': {'class': 'form-control'}}) }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            {{ form_label(formCoupon.code, "Code : ", {'label_attr': {'class': 'col-sm-3 control-label'}}) }}
+                            <div class="col-sm-9">
+                                {{ form_widget(formCoupon.code, {'attr': {'class': 'form-control'}}) }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            {{ form_label(formCoupon.actif, "Activé : ", {'label_attr': {'class': 'col-sm-3 control-label'}}) }}
+                            <div style="margin-top: 5px;" class="col-sm-9">
+                                {{ form_widget(formCoupon.actif, {'attr': {'data-on-text': 'Oui','data-off-text': 'Non','class':'switch'}}) }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            {{ form_label(formCoupon.freeShipping, "Livraison Gratuite : ", {'label_attr': {'class': 'col-sm-3 control-label'}}) }}
+                            <div style="margin-top: 5px;" class="col-sm-9">
+                                {{ form_widget(formCoupon.freeShipping, {'attr': {'data-on-text': 'Oui','data-off-text': 'Non','class':'switch'}}) }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            {{ form_label(formCoupon.pourcentage, "Type Réduction : ", {'label_attr': {'class': 'col-sm-3 control-label'}}) }}
+                            <div style="margin-top: 5px;" class="col-sm-9">
+                                {{ form_widget(formCoupon.pourcentage, {'attr': {'data-off-color': 'warning','data-on-text': 'Pourcentage','data-off-text': 'Montant','class':'switch'}}) }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            {{ form_label(formCoupon.valeur, "Valeur Réduction : ", {'label_attr': {'class': 'col-sm-3 control-label'}}) }}
+                            <div class="col-sm-9">
+                                {{ form_widget(formCoupon.valeur, {'attr': {'class': 'form-control numerique'}}) }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            {{ form_label(formCoupon.dateDebut, "Date Début : ", {'label_attr': {'class': 'col-sm-3 control-label'}}) }}
+                            <div class="col-sm-9">
+                                {{ form_widget(formCoupon.dateDebut, {'attr': {'class': 'form-control'}}) }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            {{ form_label(formCoupon.dateFin, "Date Fin : ", {'label_attr': {'class': 'col-sm-3 control-label'}}) }}
+                            <div class="col-sm-9">
+                                {{ form_widget(formCoupon.dateFin, {'attr': {'class': 'form-control'}}) }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            {{ form_label(formCoupon.montantMin, "Montant Min : ", {'label_attr': {'class': 'col-sm-3 control-label'}}) }}
+                            <div class="col-sm-9">
+                                {{ form_widget(formCoupon.montantMin, {'attr': {'class': 'form-control numerique'}}) }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            {{ form_label(formCoupon.montantMax, "Montant Max : ", {'label_attr': {'class': 'col-sm-3 control-label'}}) }}
+                            <div class="col-sm-9">
+                                {{ form_widget(formCoupon.montantMax, {'attr': {'class': 'form-control numerique',"data-parsley-greater-than":"appbundle_coupon_montantMin","data-parsley-greater-than-message":"Cette valeur doit supérieure au montant minimum"}}) }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            {{ form_label(formCoupon.forAll, "Bénéficiaires : ", {'label_attr': {'class': 'col-sm-3 control-label'}}) }}
+                            <div style="margin-top: 5px;" class="col-sm-9">
+                                {{ form_widget(formCoupon.forAll, {'attr': {'data-off-color': 'warning','data-on-text': 'Tous les clients','data-off-text': 'Clients Séléctionnés','class':'switch'}}) }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6" id="clients">
+                        <div class="form-group">
+                            {{ form_label(formCoupon.clients, "Clients : ", {'label_attr': {'class': 'col-sm-3 control-label'}}) }}
+                            <div class="col-sm-9">
+                                {{ form_widget(formCoupon.clients, {'attr': {'class': 'form-control multi'}}) }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <button class="btn btn-primary btn-sm pull-right" type="submit"><i class="fa fa-floppy-o" aria-hidden="true"></i> Enregistrer</button>
+                </div>
+                {{ form_rest(formCoupon) }}
+                {{ form_end(formCoupon) }}
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascript %}
+    <script type="text/javascript" src="{{ asset('js/bootstrap-switch.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/bootstrap-multiselect.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/jquery.dataTables.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/dataTables.bootstrap.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/jquery-ui-timepicker-addon.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/jquery-ui-timepicker-fr.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/jquery-ui-sliderAccess.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/coupons_edit.js') }}"></script>
+{% endblock %}

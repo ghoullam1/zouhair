@@ -1,0 +1,71 @@
+{% extends "layout_front.html.twig" %}
+{% block title %}Contactez-nous{% endblock %}
+
+{% block contenu %}
+    <div class="page-title fix"><!--Start Title-->
+        <div class="overlay section">
+            <h2>Contactez-nous</h2>
+        </div>
+    </div><!--End Title-->
+    <div class="contact-page-2 page fix"><!--Start Contact Area-->
+        <div class="container">
+            <div class="row">
+                <div class="map-container col-sm-12">
+                    <div id="googleMap">
+                        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d13299.384311497783!2d-7.6872638722074!3d33.557375291893166!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xda62cb53b480407%3A0x4167a22a17b2d0b!2sEl+Oulfa%2C+Casablanca%2C+Maroc!5e0!3m2!1sfr!2sfr!4v1491269238681" frameborder="0" style="border:0;width: 100%;height: 100%;" allowfullscreen></iframe>
+                    </div>
+                </div>
+                <div class="contact-info col-sm-12">
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <div class="info-single">
+                                <i class="fa fa-map-marker"></i>
+                                <p>Riad El Oulfa,  Oulfa</p>
+                                <p>22200 Casablanca</p>
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="info-single">
+                                <i class="fa fa-phone"></i>
+                                <p>+212 630 57 33 43</p>
+                                <p>+212 660 31 18 68</p>
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="info-single">
+                                <i class="fa fa-globe"></i>
+                                <a href="#">info@webstore.ma</a>
+                                <a href="#">www.webstore.ma</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="contact-form col-sm-12">
+                    <h2>LAISSER UN MESSAGE</h2>
+                    <form action="#" method="POST" name="contactForm">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <label for="contactForm_name">Name*</label>
+                                <input name="contactForm[name]" required="" type="text" id="contactForm_name" />
+                                <label for="contactForm_email">E-mail*</label>
+                                <input name="contactForm[email]" required="" type="email" id="contactForm_email" />
+                                <label for="contactForm_phone">Phone*</label>
+                                <input name="contactForm[phone]" class="phone" type="text" id="contactForm_phone" />
+                                <label for="contactForm_subject">Subject*</label>
+                                <input name="contactForm[subject]" required="" type="text" id="contactForm_subject" />
+                            </div>
+                            <div class="col-sm-6">
+                                <label for="contactForm_message">Message*</label>
+                                <textarea required="" name="contactForm[message]" id="contactForm_message" rows="7"></textarea>
+                                <input type="submit" class="submit" value="Envoyer"/>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div><!--End Contact Area-->
+{% endblock %}
+
+{% block javascript %}
+{% endblock %}

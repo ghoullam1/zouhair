@@ -1,0 +1,511 @@
+<!DOCTYPE HTML>
+<html lang="fr-FR">
+    <head>
+        <meta charset="UTF-8">
+        <title>Zouhair Zapatos | {% block title %}{% endblock %}</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        {% block head %}
+        {% endblock %}
+        <!-- Fav Icon -->
+        <link id="favicon" rel="icon" type="image/ico" href="{{ asset('favicon.ico') }}" />
+        <!-- Google Font Raleway -->
+        <link href='https://fonts.googleapis.com/css?family=Raleway:200,300,500,400,600,700,800' rel='stylesheet' type='text/css'>
+        <!-- Google Font Dancing Script -->
+        <link href='https://fonts.googleapis.com/css?family=Dancing+Script' rel='stylesheet' type='text/css'>
+        <!-- Bootstrap CSS -->
+        <link rel="stylesheet" type="text/css" href="{{ asset('front/css/bootstrap.min.css') }}" />
+        <!-- Font Awesome CSS -->
+        <link rel="stylesheet" type="text/css" href="{{ asset('front/css/font-awesome.min.css') }}" />
+        <!-- Owl Carousel CSS -->
+        <link rel="stylesheet" type="text/css" href="{{ asset('front/css/owl.carousel.min.css') }}" />
+        <!-- Animate CSS -->
+        <link rel="stylesheet" type="text/css" href="{{ asset('front/css/animate.min.css') }}" />
+        <!-- simpleLens CSS -->
+        <link rel="stylesheet" type="text/css" href="{{ asset('front/css/jquery.simpleLens.css') }}" />
+        <!-- Price Slider CSS -->
+        <link rel="stylesheet" type="text/css" href="{{ asset('front/css/jquery-price-slider.css') }}" />
+        <!-- MeanMenu CSS -->
+        <link rel="stylesheet" type="text/css" href="{{ asset('front/css/meanmenu.min.css') }}" />
+        <!-- Magnific Popup CSS -->
+        <link rel="stylesheet" type="text/css" href="{{ asset('front/css/magnific-popup.css') }}" />
+        <!-- Nivo Slider CSS -->
+        <link rel="stylesheet" type="text/css" href="{{ asset('front/css/nivo-slider.css') }}" />
+        <!-- Stylesheet CSS -->
+        <link rel="stylesheet" type="text/css" href="{{ asset('front/css/style.css') }}" />
+        <!-- Responsive Stylesheet -->
+        <link rel="stylesheet" type="text/css" href="{{ asset('front/css/responsive.css') }}" />
+        <!--[if IE]><script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+        <style type="text/css">
+            .sort select {
+                -webkit-appearance: none;
+                -moz-appearance: none;
+                appearance: none;
+                background: #fff url("{{ asset('images/bottom-arrow.png') }}") no-repeat scroll 90% center;
+                border: 0px;
+                min-width: 40px;
+            }
+            .sort-by select, .show-product select {
+                -webkit-appearance: none;
+                -moz-appearance: none;
+                appearance: none;
+                background: #fff url("{{ asset('images/bottom-arrow.png') }}") no-repeat scroll 90% center;
+                border: 1px solid #d7d7d7;
+                color: #515151;
+                font-size: 16px;
+                font-weight: 500;
+                padding: 0 5px;
+                text-transform: capitalize;
+            }
+        </style>
+        {% block style %}
+        {% endblock %}
+    </head>
+    <body>
+        <div class="header-top"><!--Start Header Top Area-->
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-12 col-md-4">
+                        <div class="info">
+                            <div class="phn-num float-left">
+                                <i class="fa fa-phone float-left"></i>
+                                <p>+212 674 57 80 54</p>
+                            </div>
+                            <div class="mail-id float-left">
+                                <i class="fa fa-envelope-o float-left"></i>
+                                <p>contact@zouhair.com</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-12 col-md-4">
+                        <div class="socials text-center">
+                            <a href="https://www.facebook.com/Zouhair Zapatos"><i class="fa fa-facebook"></i></a>
+                            <a href="#"><i class="fa fa-twitter"></i></a>
+                            <a href="#"><i class="fa fa-linkedin"></i></a>
+                            <a href="#"><i class="fa fa-google-plus"></i></a>
+                        </div>
+                    </div>
+                    <div class="col-sm-12 col-md-4">
+                        <div id="top-menu" class="float-right">
+                            <ul>
+                                {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+                                    {% if is_granted('ROLE_ADMIN') %}
+                                        <li><a target="_blank" href="{{ path('app_admin_index') }}">Administration</a></li>
+                                        {% endif %}
+                                    <li><a href="{{ path('app_front_compte') }}">Mon compte</a></li>
+                                    <li><a href="{{ path('logout') }}">Déconnexion</a></li>
+                                    {% else %}
+                                    <li><a href="{{ path('login') }}">Se connecter</a></li>
+                                    <li><a href="{{ path('login') }}">Créer un compte</a></li>
+                                    {% endif %}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div><!--End Header Top Area-->
+        <div style="margin-right: 0;margin-left: 0;" class="row">
+            <div class="col-md-12" id="notifications">
+                {% for flashMessage in app.session.flashbag.get('notice') %}
+                    <br>
+                    <section>
+                        <div class="container" >
+                            <div class="row" >
+                                <div class="col-lg-12" >
+                                    <div class="alert alert-warning alert-dismissable">
+                                        <i class="fa fa-exclamation-triangle" aria-hidden="true"></i>
+                                        <button aria-hidden="true" data-dismiss="alert" class="close" type="button">x</button>
+                                        {{ flashMessage|raw }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div> 
+                    </section>
+                {% endfor %} 
+                {% for flashMessage in app.session.flashbag.get('success') %}
+                    <br>
+                    <section>
+                        <div class="container" >
+                            <div class="row" >
+                                <div class="col-lg-12" >
+                                    <div class="alert alert-success alert-dismissable">
+                                        <i class="icon fa fa-check" ></i>
+                                        <button aria-hidden="true" data-dismiss="alert" class="close" type="button">x</button>
+                                        {{ flashMessage|raw }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div> 
+                    </section>
+                {% endfor %} 
+                {% for flashMessage in app.session.flashbag.get('error') %}
+                    <br>
+                    <section>
+                        <div class="container" >
+                            <div class="row" >
+                                <div class="col-lg-12" >
+                                    <div class="alert alert-danger alert-dismissable">
+                                        <i class="fa fa-times-circle" aria-hidden="true"></i>
+                                        <button aria-hidden="true" data-dismiss="alert" class="close" type="button">x</button>
+                                        {{ flashMessage|raw }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div> 
+                    </section>
+                {% endfor %} 
+            </div>
+        </div>
+        <div class="header-area"><!--Start Header Area-->
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-4 col-lg-3">
+                        <div class="log-link">
+                            {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+                                <p></p>
+                            {% else %}
+                                <p>Bienvenue sur Zouhair Zapatos,vous pouvez</p>
+                                <h5><a href="{{ path('login') }}">Se connecter</a> ou <a href="{{ path('login') }}">Créer un compte</a></h5>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="col-sm-4 col-lg-6">
+                        <div class="logo text-center">
+                            <a href="{{ path('app_front_index') }}">
+                                <img alt="logo" src="{{ image('images/logo.png').resize(200, 200) }}" />
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-sm-4 col-lg-3">
+                        {% if hideCart is not defined %}
+                            <div class="cart-info float-right">
+                                {% include 'AppBundle:front:panier.html.twig' with {'panier': panier} %}
+                            </div>
+                        {% endif %}
+                        <div class="search float-right">
+                            <input type="text" placeholder="Référence produit..." />
+                            <button class="submit"><i class="fa fa-search"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div><!--End Header Area-->
+        <div class="menu-area"><!--Start Main Menu Area-->
+            <div class="container">
+                <div class="row">
+                    <div class="clo-md-12">
+                        <div class="main-menu hidden-sm hidden-xs">
+                            <nav>
+                                <ul>
+                                    <li><a href="{{ path('app_front_index') }}">Accueil</a></li>
+                                        {% for genre in genres %}
+                                            {% if genre.categories|length > 0 %}
+                                            <li><a href="#">{{ genre.libelle }}</a>
+                                                <ul class="sub-menu">
+                                                    {% for cat in genre.categories %}
+                                                        <li><a href="{{ path('app_front_produits',{'slug':cat.slug,'id_genre':genre.id}) }}">{{ cat.libelle }}</a></li>
+                                                        {% endfor %}
+                                                </ul>
+                                            </li>
+                                        {% endif %}
+                                    {% endfor %}
+                                    <li><a href="{{ path('app_front_contact') }}">Contactez-nous</a></li>
+                                </ul>
+                            </nav>
+                        </div>
+                        <div class="mobile-menu hidden-md hidden-lg">
+                            <nav>
+                                <ul>
+                                    <li><a href="{{ path('app_front_index') }}">NEWSLETTER</a></li>
+                                        {% for genre in genres %}
+                                            {% if genre.categories|length > 0%}
+                                            <li><a href="#">{{ genre.libelle }}</a>
+                                                <ul>
+                                                    {% for cat in genre.categories %}
+                                                        <li><a href="{{ path('app_front_produits',{'slug':cat.slug,'id_genre':genre.id}) }}">{{ cat.libelle }}</a></li>
+                                                        {% endfor %}
+                                                </ul>
+                                            </li>
+                                        {% endif %}
+                                    {% endfor %}
+                                    <li><a href="">INFORMATION</a></li>
+                                    <li><a href="{{ path('app_front_contact') }}">CONTACTEZ-NOUS</a></li>
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div><!--End Main Menu Area-->
+        {% block contenu %}
+
+        {% endblock %}
+        <div  class="funfact section fix"><!--Start Fun Factor Area-->
+            <div class="container">
+                <div class="row">
+                    <div class="col-xs-6 col-sm-3">
+                        <div class="fun-factor">
+                            <div class="fun-factor-in">
+                                <i class="fa fa-user"></i>
+                                <div class="fun-factor-out"></div>
+                            </div>
+                            <p class="timer" data-from="0" data-to="{{ nbrClients }}"></p>
+                            <h4>Clients</h4>
+                        </div>
+                    </div>
+                    <div class="col-xs-6 col-sm-3">
+                        <div class="fun-factor">
+                            <div class="fun-factor-in">
+                                <i class="fa fa-database"></i>
+                                <div class="fun-factor-out"></div>
+                            </div>
+                            <p class="timer" data-from="0" data-to="{{ nbrProduits }}"></p>
+                            <h4>Produits</h4>
+                        </div>
+                    </div>
+                    <div class="col-xs-6 col-sm-3">
+                        <div class="fun-factor">
+                            <div class="fun-factor-in">
+                                <i class="fa fa-buysellads" aria-hidden="true"></i>
+                                <div class="fun-factor-out"></div>
+                            </div>
+                            <p class="timer" data-from="0" data-to="{{ nbrMarques }}"></p>
+                            <h4>Marques</h4>
+                        </div>
+                    </div>
+                    <div class="col-xs-6 col-sm-3">
+                        <div class="fun-factor">
+                            <div class="fun-factor-in">
+                                <i class="fa fa-money"></i>
+                                <div class="fun-factor-out"></div>
+                            </div>
+                            <p class="timer" data-from="0" data-to="{{ nbrCommandes }}"></p>
+                            <h4>Commandes</h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div><!--Start Fun Factor Area-->
+        {% if commentaires|length > 0 %}
+            <div class="testimonial-area fix"><!--Start Testimonial Area-->
+                <div class="overlay section">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-sm-offset-0 col-sm-12 col-md-offset-2 col-md-8">
+                                <div class="testimonial-slider  owl-carousel">
+                                    {% for commentaire in commentaires %}
+                                        <div class="testimonial-item">
+                                            <div class="image fix">
+                                                <img src="{% if commentaire.client.image is not null %}{{ image('images/upload/'~ commentaire.client.image.fullName).resize(165,160) }}{% else %}{{image('images/no_image.png').resize(165,160)}}{% endif %}" alt="" />
+                                            </div>
+                                            <div class="content fix">
+                                                <p>{{ commentaire.commentaire }}</p>
+                                                <h3>{{ commentaire.client.nom ~ ' ' ~ commentaire.client.prenom }}</h3>
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div><!--End Testimonial Area-->
+        {% endif %}
+        {% if marques|length > 0 %}
+            <div class="brand-area section fix"><!--Start Brand Area-->
+                <div class="container">
+                    <div class="row">
+                        <div class="section-title">
+                            <h2>Nos marques</h2>
+                            <div class="underline"></div>
+                        </div>
+                        <div class="brand-slider owl-carousel">
+                            {% for marque in marques %}
+                                <div class="brand-item"><img src="{{ image("images/upload/" ~ marque.image.fullName).resize(141,71) }}" alt="{{ marque.nom }}" /></div>
+                                {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div><!--End Brand Area-->
+        {% endif %}
+        <div class="support-area section fix"><!--Start Support Area-->
+            <div class="container">
+                <div class="row">
+                    <div class="support col-sm-3">
+                        <i class="fa fa-thumbs-up"></i>
+                        <h3>Haute qualité</h3>
+                        <p>Lorem ipsum dolor sit amet, conseetur adipiscing elit, consectetur</p>
+                    </div>
+                    <div class="support col-sm-3">
+                        <i class="fa fa-bus"></i>
+                        <h3>Livraison rapide</h3>
+                        <p>Lorem ipsum dolor sit amet, conseetur adipiscing elit, consectetur</p>
+                    </div>
+                    <div class="support col-sm-3">
+                        <i class="fa fa-phone"></i>
+                        <h3>support 24/7</h3>
+                        <p>Lorem ipsum dolor sit amet, conseetur adipiscing elit, consectetur</p>
+                    </div>
+                    <div class="support col-sm-3">
+                        <i class="fa fa-random"></i>
+                        <h3>14 - jour retours</h3>
+                        <p>Lorem ipsum dolor sit amet, conseetur adipiscing elit, consectetur</p>
+                    </div>
+                </div>
+            </div>
+        </div><!--Start Support Area-->
+        <div class="footer-top-area fix"><!--Start Footer top area-->
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-6 col-md-3">
+                        <div class="footer-about">
+                            <div class="image">
+                                <img  alt="logo" src="{{ image('images/logo.png').resize(150, 150) }}" />
+                                <h3>Zouhair Zapatos</h3>
+                            </div>
+                            <p>perspiciatis unde omnis iste natus error sit voluptatem accm doloremque antium, totam rem aperiam, eaque ipsa perspiciatis unde omnis iste</p>
+                        </div>
+                        <div class="footer-contact">
+                            <div class="single-contact">
+                                <div class="icon">
+                                    <i class="fa fa-map-marker"></i>
+                                </div>
+                                <div class="details">
+                                    <p>Riad El Oulfa, Oulfa</p>
+                                    <p>22200 Casablanca</p>
+                                </div>
+                            </div>
+                            <div class="single-contact">
+                                <div class="icon">
+                                    <i class="fa fa-phone"></i>
+                                </div>
+                                <div class="details">
+                                    <p>+212 674 57 80 54</p>
+                                    <p>+212 674 57 80 54</p>
+                                </div>
+                            </div>
+                            <div class="single-contact">
+                                <div class="icon">
+                                    <i class="fa fa-dribbble"></i>
+                                </div>
+                                <div class="details">
+                                    <a>contact@Zouhair Zapatos.com</a>
+                                    <a href="{{ path('app_front_index') }}">www.Zouhair Zapatos.com</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-md-3">
+                        <div class="footer-quick-link footer-links">
+                            <h2>LIEN RAPIDE</h2>
+                            <ul>
+                                <li><a href="{{ path('app_front_index') }}">Accueil</a></li>
+                                <li><a href="shop.html">Shop</a></li>
+                                <li><a href="shop-left-sidebar.html">New Arrivals</a></li>
+                                <li><a href="services.html">Services</a></li>	
+                                <li><a href="portfolio-1.html">Portfolio</a></li>
+                                <li><a href="blog.html">Blog</a></li>
+                                <li><a href="#">Shortcodes</a></li>
+                                <li><a href="contact.html">Contact</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-sm-12 col-md-6">
+                        <div class="row">
+                            <div class="col-sm-8 footer-support footer-links">
+                                <h2>OUR SUPPORT</h2>
+                                <ul>
+                                    <li><a href="#">Site Map</a></li>
+                                    <li><a href="#">privacy Policy</a></li>
+                                    <li><a href="#">Your Account</a></li>
+                                    <li><a href="#">Term & Conditions</a></li>
+                                    <li><a href="#">Advance Search</a></li>
+                                    <li><a href="faq.html">Help & FAQs</a></li>
+                                    <li><a href="#">Gift Voucher</a></li>
+                                    <li><a href="contact-2.html">Contact Us</a></li>
+                                </ul>
+                            </div>
+                            <div class="col-sm-4 footer-account footer-links">
+                                <h2>my Account</h2>
+                                <ul>
+                                    <li><a href="#">my Account</a></li>
+                                    <li><a href="#">order History</a></li>
+                                    <li><a href="#">Returns</a></li>
+                                    <li><a href="#">Specials</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="footer-newslater fix">
+                            <div class="wrap fix">
+                                <h3>NEWS LETTER ! </h3>
+                                <form id="formNewsLetter" method="POST" action="{{ path('app_front_newsletter_inscription') }}">
+                                    <input required="" type="email" name="email" placeholder="Votre E-mail...">
+                                    <button type="submit" data-loading-text='Inscription <i class="fa fa-spinner fa-spin" aria-hidden="true"></i>' class="submit">S'INSCRIRE</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div><!--Start Footer top area-->
+        <div class="footer-area fix"><!--Start Footer Area-->
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="copy-right">
+                            <p>&copy; {{ "now"|date('Y') }} <b>Zouhair Zapatos</b>, Tous droits réservés</p>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="payment">
+                            <ul>
+                                <li><a href="#"><img  alt="" /></a></li>
+                                <li><a href="#"><img  alt="" /></a></li>
+                                <li><a href="#"><img  alt="" /></a></li>
+                                <li><a href="#"><img  alt="" /></a></li>
+                                <li><a href="#"><img  alt="" /></a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div><!--End Footer Area-->
+
+        <!-- jQuery 2.1.4 -->
+        <script type="text/javascript" src="{{ asset('front/js/jquery-2.1.4.min.js') }}"></script>
+        <!-- Bootstrap JS -->
+        <script type="text/javascript" src="{{ asset('front/js/bootstrap.min.js') }}"></script>
+        <!-- Owl Carousel JS -->
+        <script type="text/javascript" src="{{ asset('front/js/owl.carousel.min.js') }}"></script>
+        <!--countTo JS -->
+        <script type="text/javascript" src="{{ asset('front/js/jquery.countTo.js') }}"></script>
+        <!-- mixitup JS -->
+        <script type="text/javascript" src="{{ asset('front/js/jquery.mixitup.min.js') }}"></script>
+        <!-- magnific popup JS -->
+        <script type="text/javascript" src="{{ asset('front/js/jquery.magnific-popup.min.js') }}"></script>
+        <!-- Appear JS -->
+        <script type="text/javascript" src="{{ asset('front/js/jquery.appear.js') }}"></script>
+        <!-- MeanMenu JS -->
+        <script type="text/javascript" src="{{ asset('front/js/jquery.meanmenu.min.js') }}"></script>
+        <!-- Nivo Slider JS -->
+        <script type="text/javascript" src="{{ asset('front/js/jquery.nivo.slider.pack.js') }}"></script>
+        <!-- Scrollup JS -->
+        <script type="text/javascript" src="{{ asset('front/js/jquery.scrollup.min.js') }}"></script>
+        <!-- simpleLens JS -->
+        <script type="text/javascript" src="{{ asset('front/js/jquery.simpleLens.min.js') }}"></script>
+        <!-- Price Slider JS -->
+        <script type="text/javascript" src="{{ asset('front/js/jquery-price-slider.js') }}"></script>
+        <!-- WOW JS -->
+        <script type="text/javascript" src="{{ asset('front/js/wow.min.js') }}"></script>
+        <script>
+            new WOW().init();
+        </script>	
+        <script type="text/javascript" src="{{ asset('js/parsley.min.js') }}"></script>
+        <script type="text/javascript" src="{{ asset('js/parsley-fr.js') }}"></script>
+        <!-- Main JS -->
+        <script type="text/javascript" src="{{ asset('front/js/main.js') }}"></script>
+        <script type="text/javascript" src="{{ asset('front/js/globale.js') }}"></script>
+        {% block javascript %}
+        {% endblock %}
+    </body>
+
+</html>

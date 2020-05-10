@@ -1,0 +1,147 @@
+{% extends "layout_admin.html.twig" %}
+{% set item = "deals" %}
+{% block title %}Deals : {{ deal.titre }}{% endblock %}
+
+
+{% block breadcrumb %}
+    <li><a href="{{ path('app_admin_index') }}">Administration</a></li>
+    <li><a href="{{ path('app_admin_deals') }}">Deals</a></li>
+    <li class="active">{{ deal.titre }}</li>
+    {% endblock %}
+
+{% block stylesheet %}
+    <link rel="stylesheet" type="text/css" href="{{ asset('css/bootstrap-switch.css') }}" />
+    <link rel="stylesheet" media="all" type="text/css" href="{{ asset('css/jquery-ui-timepicker-addon.min.css') }}" />
+{% endblock %}
+
+{% block contenu %}
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="well well-ws-inc">
+                <legend><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Modifier Deal ({{ deal.titre }})</legend>
+
+                {{ form_start(formDeal,{'attr':{'class':'form-horizontal','enctype':'multipart/form-data','method':'POST','data-parsley-validate':''}}) }}
+                {{ form_errors(formDeal) }}
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            {{ form_label(formDeal.titre, "Titre : ", {'label_attr': {'class': 'col-sm-3 control-label'}}) }}
+                            <div class="col-sm-9">
+                                {{ form_widget(formDeal.titre, {'attr': {'class': 'form-control'}}) }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            {{ form_label(formDeal.description, "Déscription : ", {'label_attr': {'class': 'col-sm-3 control-label'}}) }}
+                            <div class="col-sm-9">
+                                {{ form_widget(formDeal.description, {'attr': {'class': 'form-control'}}) }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            {{ form_label(formDeal.categorie, "Catégorie : ", {'label_attr': {'class': 'col-sm-3 control-label'}}) }}
+                            <div class="col-sm-9">
+                                {{ form_widget(formDeal.categorie, {'attr': {'class': 'form-control'}}) }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            {{ form_label(formDeal.produit, "Produit : ", {'label_attr': {'class': 'col-sm-3 control-label'}}) }}
+                            <div class="col-sm-9">
+                                {{ form_widget(formDeal.produit, {'attr': {'class': 'form-control'}}) }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            {{ form_label(formDeal.lien, "Lien : ", {'label_attr': {'class': 'col-sm-3 control-label'}}) }}
+                            <div class="col-sm-9">
+                                {{ form_widget(formDeal.lien, {'attr': {'class': 'form-control'}}) }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            {{ form_label(formDeal.newTab, "Nouvel onglet : ", {'label_attr': {'class': 'col-sm-3 control-label'}}) }}
+                            <div style="margin-top: 5px;" class="col-sm-9">
+                                {{ form_widget(formDeal.newTab, {'attr': {'data-on-text': 'Oui','data-off-text': 'Non','class':'switch'}}) }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            {{ form_label(formDeal.dateDebut, "Date Début : ", {'label_attr': {'class': 'col-sm-3 control-label'}}) }}
+                            <div class="col-sm-9">
+                                {{ form_widget(formDeal.dateDebut, {'attr': {'class': 'form-control'}}) }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            {{ form_label(formDeal.dateFin, "Date Fin : ", {'label_attr': {'class': 'col-sm-3 control-label'}}) }}
+                            <div class="col-sm-9">
+                                {{ form_widget(formDeal.dateFin, {'attr': {'class': 'form-control'}}) }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            {{ form_label(formDeal.active, "Activé : ", {'label_attr': {'class': 'col-sm-3 control-label'}}) }}
+                            <div style="margin-top: 5px;" class="col-sm-9">
+                                {{ form_widget(formDeal.active, {'attr': {'data-on-text': 'Oui','data-off-text': 'Non','class':'switch'}}) }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            {{ form_label(formDeal.image, "Image : ", {'label_attr': {'class': 'col-sm-3 control-label'}}) }}
+                            <div class="col-sm-9">
+                                <button class="btn btn-danger btn-sm" id="deleteImage"><i class="fa fa-trash-o" aria-hidden="true"></i> Supprimer la photo</button>
+                                <button style="display: none;" class="btn btn-primary btn-sm" id="bind_img">Veuillez choisir une photo <i class='fa fa-paperclip'></i></button>
+                                {{ form_widget(formDeal.image, {'attr': {'style':'display: none;'}}) }}
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-sm-9 col-sm-offset-3">
+                                <img class="img-responsive img-thumbnail" id="show_img" src="{{ path('app_image',{'nom':deal.image.nom}) }}" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+
+                <input type="hidden" id="check_image" name="check_image" />
+
+                <div class="form-group">
+                    <button class="btn btn-primary btn-sm pull-right" type="submit"><i class="fa fa-floppy-o" aria-hidden="true"></i> Enregistrer</button>
+                </div>
+                {{ form_rest(formDeal) }}
+                {{ form_end(formDeal) }}
+
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascript %}
+    <script type="text/javascript" src="{{ asset('js/bootstrap-switch.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/jquery-ui-timepicker-addon.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/jquery-ui-timepicker-fr.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/jquery-ui-sliderAccess.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/deals_edit.js') }}"></script>
+{% endblock %}

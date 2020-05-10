@@ -1,0 +1,90 @@
+{% extends "layout_front.html.twig" %}
+{% block title %}Se connecter / Créer un nouveau compte{% endblock %}
+
+
+
+{% block style %}
+    <style type="text/css">
+        img.captcha_image{
+            margin-bottom: 10px;
+        }
+    </style>
+{% endblock %}
+
+{% block contenu %}
+
+    <div class="page-title fix"><!--Start Title-->
+        <div class="overlay section">
+            <h2>Se connecter / Créer un nouveau compte</h2>
+        </div>
+    </div><!--End Title-->
+    <div class="login-page page fix"><!--start login Area-->
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-6 col-md-5">
+                    <div class="login">
+                        <form id="login-form" method="POST" action="{{ path('security_check_route') }}">
+                            <h2>Se connecter</h2>
+                            <p>Bienvenue sur votre compte</p>
+                            {% if error %}
+                                <div class="alert alert-danger alert-dismissable">
+                                    <i class="fa fa-times-circle" aria-hidden="true"></i>
+                                    <button aria-hidden="true" data-dismiss="alert" class="close" type="button">x</button>
+                                    {{ error.messageKey|trans(error.messageData, 'security') }}
+                                </div>
+                            {% endif %}
+                            <label>Email<span>*</span></label>
+                            <input placeholder="Email@domain.com" value="{{ last_username }}" required="" name="_username"  type="text" />
+                            <label>Mot de passe<span>*</span></label>
+                            <input required="" name="_password" type="password" placeholder="Mot de passe" />
+                            <div class="remember">
+                                <input name="_remember_me" type="checkbox" />
+                                <p>Se souvenir de moi!</p>
+                                <a href="#">Mot de passe oublié ?</a>
+                            </div>
+                            <input type="submit" value="Se connecter" />
+                        </form>
+                    </div>
+                </div>
+                <div class="col-md-2"></div>
+                <div class="col-sm-6 col-md-5">
+                    <div class="login">
+                        {{ form_start(formClient,{'attr':{'id':'signup-form','method':'POST','data-parsley-validate':''}}) }}
+                        <h2>Créer un nouveau compte</h2>
+                        <p>Créez votre propre compte</p>
+                        {% spaceless %}
+                            {% if not formClient.vars.valid %}
+                                <div class="alert alert-danger">
+                                    {{ form_errors(formClient) }}
+                                    <ul>
+                                        {% for children in formClient.children %}
+                                            {% if not children.vars.valid %}
+                                                <li> {{ form_errors(children) }}</li>
+                                                {% endif %}
+                                            {% endfor %}
+                                    </ul>
+                                </div>
+                            {% endif %}
+                        {% endspaceless %}
+                        <label for="appbundle_client_email">Email<span>*</span></label>
+                        {{ form_widget(formClient.email, {'attr': {}}) }}
+                        <label for="appbundle_client_password">Mot de passe<span>*</span></label>
+                        {{ form_widget(formClient.password, {'attr': {'data-parsley-length':'[8, 16]'}}) }}
+                        <label for="confirm_password">Confirmer le mot de passe<span>*</span></label>
+                        <input data-parsley-equalto="#appbundle_client_password" required="" id="confirm_password" data-parsley-length="[8, 16]" name="confirm_password" placeholder="Retaper le mot de passe" type="password" />
+                        <label for="appbundle_client_ville">Ville<span>*</span></label>
+                        {{ form_widget(formClient.ville) }}
+                        <label for="appbundle_client_captcha">Code Antispam<span>*</span></label>
+                        {{ form_widget(formClient.captcha, {'attr': {}}) }}
+                        <input type="submit" value="Créer un compte" />
+                        {{ form_rest(formClient) }}
+                        {{ form_end(formClient) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div><!--End login Area-->
+
+{% endblock %}
+{% block javascript %}
+{% endblock %}

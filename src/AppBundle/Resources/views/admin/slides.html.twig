@@ -1,0 +1,123 @@
+{% extends "layout_admin.html.twig" %}
+{% set item = "slides" %}
+
+{% block title %}Slides{% endblock %}
+
+{% block stylesheet %}
+    <link rel="stylesheet" type="text/css" href="{{ asset('css/bootstrap-switch.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ asset('css/slides.css') }}" />
+{% endblock %}
+
+{% block breadcrumb %}
+    <li><a href="{{ path('app_admin_index') }}">Administration</a></li>
+    <li class="active">Slides</li>
+    {% endblock %}
+
+{% block contenu %}
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="well well-ws-inc">
+                <legend><i class="fa fa-list" aria-hidden="true"></i> Liste Slides</legend>
+                {% if slides|length > 0 %}
+                    <ul class="list-slide">
+                        {% for slide in slides %}
+                            <li class="list-item"  data-id="{{ slide.id }}">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <img class="img-responsive" src="{{ image('images/upload/' ~ slide.image.fullName).resize(100,50) }}" />
+                                    </div>
+                                    <div class="col-md-5">
+                                        {% if slide.titre is not null %}    <p><span style="font-weight: bold;">Titre : </span> {{ slide.titre }}</p> {% endif %}
+                                        {% if slide.description is not null %}     <p><span style="font-weight: bold;">Déscription : </span>{% if slide.description|length > 50 %} {{ slide.description|slice(0,50) }}... {% else %} {{ slide.description }}{% endif%}</p>{% endif %}
+                                    </div>
+                                    <div class="col-md-3">  
+                                        <a class="btn btn-sm btn-danger pull-right" href="{{ path('app_admin_slides_remove',{'id':slide.id}) }}"><i class="fa fa-times" title="Supprimer" ></i></a> <a style="margin-right: 5px;" class="btn btn-sm btn-primary pull-right" href="{{ path('app_admin_slides_edit',{'id':slide.id}) }}"><i class="fa fa-pencil-square-o" title="Modifier" ></i></a>
+                                    </div>
+                                </div>
+                            </li>
+                        {% endfor %}
+                    </ul>
+
+
+                    <div style="margin-top: 10px;margin-bottom: 35px;">
+                        <button data-loading-text='<i class="fa fa-spinner" aria-hidden="true"></i> Veuillez patienter' id="save-order" class="btn btn-sm btn-primary pull-right"><i class="fa fa-floppy-o" aria-hidden="true"></i> Enregistrer l'ordre</button>
+                    </div>
+                {% else %}
+                    <div class="alert alert-info">
+                        <p><strong>Aucune slide enregistrée.</strong>Veuillez utiliser le formulaire d'ajout pour enregistrer des nouvelles slides.</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="well well-ws-inc">
+                <legend><i class="fa fa-plus-square" aria-hidden="true"></i> Nouvelle Slide</legend>
+                {{ form_start(formSlide,{'attr':{'class':'form-horizontal','enctype':'multipart/form-data','method':'POST','data-parsley-validate':''}}) }}
+                {{ form_errors(formSlide) }}
+
+                <div class="form-group">
+                    {{ form_label(formSlide.titre, "Titre : ", {'label_attr': {'class': 'col-sm-3 control-label'}}) }}
+                    <div class="col-sm-9">
+                        {{ form_widget(formSlide.titre, {'attr': {'class': 'form-control'}}) }}
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    {{ form_label(formSlide.description, "Déscription : ", {'label_attr': {'class': 'col-sm-3 control-label'}}) }}
+                    <div class="col-sm-9">
+                        {{ form_widget(formSlide.description, {'attr': {'class': 'form-control'}}) }}
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    {{ form_label(formSlide.categorie, "Catégorie : ", {'label_attr': {'class': 'col-sm-3 control-label'}}) }}
+                    <div class="col-sm-9">
+                        {{ form_widget(formSlide.categorie, {'attr': {'class': 'form-control'}}) }}
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    {{ form_label(formSlide.produit, "Produit : ", {'label_attr': {'class': 'col-sm-3 control-label'}}) }}
+                    <div class="col-sm-9">
+                        {{ form_widget(formSlide.produit, {'attr': {'class': 'form-control'}}) }}
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    {{ form_label(formSlide.lien, "Lien : ", {'label_attr': {'class': 'col-sm-3 control-label'}}) }}
+                    <div class="col-sm-9">
+                        {{ form_widget(formSlide.lien, {'attr': {'class': 'form-control'}}) }}
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    {{ form_label(formSlide.newTab, "Nouvel onglet : ", {'label_attr': {'class': 'col-sm-3 control-label'}}) }}
+                    <div style="margin-top: 5px;" class="col-sm-9">
+                        {{ form_widget(formSlide.newTab, {'attr': {'data-on-text': 'Oui','data-off-text': 'Non'}}) }}
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    {{ form_label(formSlide.image, "Image : ", {'label_attr': {'class': 'col-sm-3 control-label'}}) }}
+                    <div class="col-sm-9">
+                        <button class="btn btn-primary btn-sm" id="bind_img">Veuillez choisir une photo <i class='fa fa-paperclip'></i></button>
+                        {{ form_widget(formSlide.image, {'attr': {'style':'display: none;'}}) }}
+                    </div>
+                </div>
+
+
+                <div class="form-group">
+                    <button class="btn btn-primary btn-sm pull-right" type="submit"><i class="fa fa-plus-square" aria-hidden="true"></i> Ajouter</button>
+                </div>
+                {{ form_rest(formSlide) }}
+                {{ form_end(formSlide) }}
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascript %}
+    <script type="text/javascript" src="{{ asset('js/bootstrap-switch.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/slides.js') }}"></script>
+{% endblock %}

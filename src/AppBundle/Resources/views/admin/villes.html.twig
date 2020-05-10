@@ -1,0 +1,67 @@
+{% extends "layout_admin.html.twig" %}
+{% set item = "villes_ml" %}
+{% set sousItem = "ville" %}
+
+{% block title %}Villes{% endblock %}
+
+
+{% block breadcrumb %}
+    <li><a href="{{ path('app_admin_index') }}">Administration</a></li>
+    <li class="active">Villes</li>
+    {% endblock %}
+
+{% block contenu %}
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="well well-ws-inc">
+                <legend><i class="fa fa-list" aria-hidden="true"></i> Liste Villes</legend>
+                {% if villes|length > 0 %}
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Id</th>
+                                    <th>Nom</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for ville in villes %}
+                                    <tr>
+                                        <td>{{ ville.id }}</td>
+                                        <td>{{ ville.nom }}</td>
+                                        <td><a class="btn btn-sm btn-primary pull-right" href="{{ path('app_admin_villes_edit',{'id':ville.id}) }}" style="margin: 5px;"><i class="fa fa-pencil-square-o" title="Modifier" ></i></a><a style="margin: 5px;" class="btn btn-sm btn-danger pull-right" href="{{ path('app_admin_villes_remove',{'id':ville.id}) }}"><i title="Supprimer" class="fa fa-trash-o" aria-hidden="true"></i></a></td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>                   
+                {% else %}
+                    <div class="alert alert-info">
+                        <p><strong>Aucune ville enregistrée.</strong>Veuillez utiliser le formulaire d'ajout pour enregistrer des nouvelles villes.</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="well well-ws-inc">
+                <legend><i class="fa fa-plus-square" aria-hidden="true"></i> Nouvelle Ville</legend>
+                {{ form_start(formVille,{'attr':{'class':'form-horizontal','method':'POST','data-parsley-validate':''}}) }}
+                {{ form_errors(formVille) }}
+
+                <div class="form-group">
+                    {{ form_label(formVille.nom, "Nom : ", {'label_attr': {'class': 'col-sm-3 control-label'}}) }}
+                    <div class="col-sm-9">
+                        {{ form_widget(formVille.nom, {'attr': {'class': 'form-control'}}) }}
+                    </div>
+                </div>
+                <div class="form-group">
+                    <button class="btn btn-primary btn-sm pull-right" type="submit"><i class="fa fa-plus-square" aria-hidden="true"></i> Ajouter</button>
+                </div>
+                {{ form_rest(formVille) }}
+                {{ form_end(formVille) }}
+            </div>
+        </div>
+    </div>
+{% endblock %}

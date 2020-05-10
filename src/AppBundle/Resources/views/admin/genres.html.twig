@@ -1,0 +1,70 @@
+{% extends "layout_admin.html.twig" %}
+{% set item = "genres" %}
+{% block title %}Genes{% endblock %}
+
+
+{% block breadcrumb %}
+    <li><a href="{{ path('app_admin_index') }}">Administration</a></li>
+    <li class="active">Genres</li>
+    {% endblock %}
+
+{% block stylesheet %}
+    <link rel="stylesheet" type="text/css" href="{{ asset('css/genres.css') }}" />
+{% endblock %}
+
+{% block contenu %}
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="well well-ws-inc">
+                <legend><i class="fa fa-list" aria-hidden="true"></i> Liste Genrs</legend>
+                {% if genres|length > 0 %}
+                    <div class="dd" id="treeview">
+                        <ol class="dd-list">
+                            {% for genre in genres %}
+                                <li class="dd-item dd3-item" data-id="{{ genre.id }}" >
+                                    <div class="dd-handle dd3-handle">drag</div> 
+                                    <div class="dd3-content">
+                                        {{ genre.libelle }} <a style="color: red;" class="pull-right" href="{{ path('app_admin_genres_remove',{'id':genre.id}) }}"><i class="fa fa-times" title="Supprimer" ></i></a> <a style="margin-right: 5px;" class="pull-right" href="{{ path('app_admin_genres_edit',{'id':genre.id}) }}"><i class="fa fa-pencil-square-o" title="Modifier" ></i></a>
+                                    </div> 
+                                </li>
+                            {% endfor %}
+                        </ol>
+                    </div>
+                    <input   type="hidden" id="nestable-output" />
+                    <div style="margin-top: 10px;margin-bottom: 30px;">
+                        <button data-loading-text='<i class="fa fa-spinner" aria-hidden="true"></i> Veuillez patienter' id="save-order" class="btn btn-sm btn-primary pull-right"><i class="fa fa-floppy-o" aria-hidden="true"></i> Enregistrer l'ordre</button>
+                    </div>
+                {% else %}
+                    <div class="alert alert-info">
+                        <p><strong>Aucune genre enregistré.</strong>Veuillez utiliser le formulaire d'ajout pour enregistrer des nouveaux genres.</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="well well-ws-inc">
+                <legend><i class="fa fa-plus-square" aria-hidden="true"></i> Nouveau Genre</legend>
+                {{ form_start(formGenre,{'attr':{'class':'form-horizontal','method':'POST','data-parsley-validate':''}}) }}
+                {{ form_errors(formGenre) }}
+
+                <div class="form-group">
+                    {{ form_label(formGenre.libelle, "Libellé : ", {'label_attr': {'class': 'col-sm-3 control-label'}}) }}
+                    <div class="col-sm-9">
+                        {{ form_widget(formGenre.libelle, {'attr': {'class': 'form-control'}}) }}
+                    </div>
+                </div>
+                <div class="form-group">
+                    <button class="btn btn-primary btn-sm pull-right" type="submit"><i class="fa fa-plus-square" aria-hidden="true"></i> Ajouter</button>
+                </div>
+                {{ form_rest(formGenre) }}
+                {{ form_end(formGenre) }}
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascript %}
+    <script type="text/javascript" src="{{ asset('js/jquery.nestable.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/genres.js') }}"></script>
+{% endblock %}

@@ -1,0 +1,60 @@
+{% if panier.items|length > 0 %}
+    {% for item in panier.items %}
+        <tr class="item">
+            <td>{{ item.reference }}</td>
+            <td>{{ item.titre }}</td>
+            <td>
+                {% if item.couleur is not null %}
+                    <div style="background-color: {{ item.couleur.code }};" class="divColor"></div>
+                {% endif %}
+            </td>
+            <td class="text-center">
+                {% if item.taille is not null %}
+                    <span class="label label-default">{{ item.taille.code }}</span>
+                {% endif %}
+            </td>
+            <td class="text-center">{{ item.prix|number_format(2,'.',' ') }} DH</td>
+            <td class="text-center">{{ item.quantite }}</td>
+            <td class="text-center">{{ item.SousTotal|number_format(2,'.',' ') }} DH</td>
+        </tr>
+    {% endfor %}
+    <tr style="font-weight: bold;">
+        <td colspan="6" class="text-right">Sous Total Panier</td>
+        <td class="text-center">{{ panier.sousTotal|number_format(2,'.',' ') }}DH</td>
+    </tr>
+    {% if panier.modeLivraison is not null %}
+        <tr>
+            <td><i class="fa fa-truck" aria-hidden="true"></i> Livraison</td>
+            <td colspan="5">{{ panier.modeLivraison.libelle }}</td>
+            <td style="color:green;" class="text-center">+ {{ panier.modeLivraison.frais|number_format(2,'.',' ') }} DH</td>
+        </tr>
+    {% endif %}
+    {% if panier.coupon is not null %}
+        <tr>
+            <td><i class="fa fa-gift" aria-hidden="true"></i> Bon de réduction</td>
+            {% if panier.coupon.freeShipping %}
+                {% if panier.modeLivraison is null %}
+                    <td colspan="6" class="text-right"><b>Livraison Gratuite</b></td>
+                {% else %}
+                    <td colspan="5" class="text-right"><b>Livraison Gratuite</b></td>
+                    <td style="color:red;" class="text-center">- {{ panier.modeLivraison.frais|number_format(2,'.',' ') }} DH</td><td></td>
+                {% endif %}
+            {% else %}
+                <td colspan="5">{{ panier.coupon.libelle }} <span class="label label-success">- {{ panier.coupon.remise }} {{ panier.coupon.pourcentage ? '%' : 'DH' }}</span> </td>
+                <td style="color:red;" class="text-center">- {{ panier.remise|number_format(2,'.',' ') }} DH</td>
+            {% endif %}
+        </tr>
+    {% endif %}
+    <tr style="font-weight: bold;">
+        <td colspan="6" class="text-right">Total</td>
+        <td class="text-center">{{ panier.total|number_format(2,'.',' ') }}DH</td>
+    </tr>
+{% else %}
+    <tr>
+        <td colspan="7">
+            <div class="alert alert-info">
+                <p>Votre panier d'achats est vide ! <a href="{{ path('app_front_index') }}">Continuer vos achats</a></p>
+            </div>
+        </td>
+    </tr>
+{% endif %}

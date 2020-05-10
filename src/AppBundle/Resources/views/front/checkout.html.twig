@@ -1,0 +1,148 @@
+{% extends "layout_front.html.twig" %}
+{% set hideCart = true %}
+{% block title %}Validation Commande{% endblock %}
+
+{% block style %}
+    <style type="text/css">
+        .btn-ws{
+            background: #dc3545 none repeat scroll 0 0;
+            border: 0 solid;
+            color: #fff;
+            float: right;
+            font-weight: 800;
+            text-transform: uppercase;
+            font-size: 14px;
+            padding: 10px;
+        }
+        .btn-ws:hover{
+            background:#555555;
+        }
+    </style>
+{% endblock %}
+
+{% block contenu %}
+
+    <div class="page-title fix"><!--Start Title-->
+        <div class="overlay section">
+            <h2>Validation Commande</h2>
+        </div>
+    </div><!--End Title-->
+    <section class="cart-page page fix"><!--Start Cart Area-->
+        <div class="container">
+            <form method="POST" name="appbundle_client" id="appbundle_client" >
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="well well-ws-inc">
+                            <legend><i class="fa fa-user" aria-hidden="true"></i> Informations Personnelles</legend>
+                            <div class="login">
+                                <div class="row">
+                                    {% spaceless %}
+                                        {% if not formClient.vars.valid %}
+                                            <div class="alert alert-danger alert-dismissable">
+                                                <button aria-hidden="true" data-dismiss="alert" class="close" type="button">x</button>
+                                                {{ form_errors(formClient) }}
+                                                <ul>
+                                                    {% for children in formClient.children %}
+                                                        {% if not children.vars.valid %}
+                                                            <li> {{ form_errors(children) }}</li>
+                                                            {% endif %}
+                                                        {% endfor %}
+                                                </ul>
+                                            </div>
+                                        {% endif %}
+                                    {% endspaceless %}
+                                    <div class="col-md-6">
+                                        <label for="appbundle_client_nom">Nom</label>
+                                        {{ form_widget(formClient.nom, {'attr': {}}) }}
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="appbundle_client_prenom">Prénom</label>
+                                        {{ form_widget(formClient.prenom, {'attr': {}}) }}
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <label for="appbundle_client_email">Email<span>*</span></label>
+                                        {{ form_widget(formClient.email, {'attr': {}}) }}
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="appbundle_client_gsm">GSM</label>
+                                        {{ form_widget(formClient.gsm, {'attr': {'class':'phone'}}) }}
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <label for="appbundle_client_ville">Ville</label>
+                                        {{ form_widget(formClient.ville, {'attr': {}}) }}
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="appbundle_client_adresse">Adresse</label>
+                                        {{ form_widget(formClient.adresse, {'attr': {'rows':'4'}}) }}
+                                    </div>
+                                </div>
+                                {{ form_widget(formClient._token) }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="well well-ws-inc">
+                            <legend><i class="fa fa-truck" aria-hidden="true"></i> Mode Livraison</legend>
+                            <div class="login">
+                                {% if panier.modeLivraison is null %}
+                                    <div class="alert alert-warning alert-dismissable">
+                                        <button aria-hidden="true" data-dismiss="alert" class="close" type="button">x</button>
+                                        <p>Veuillez sélectionner un mode de livraison !</p>
+                                    </div>
+                                {% endif %}
+                                <label for="mode">Mode Livraison</label>
+                                <select data-url="{{ path('app_front_panier_mode_livraison_add') }}"  style="margin-bottom: 30px;" id="mode">
+                                    <option value="-1">Sélectionner un mode de livraison</option>
+                                    {% for mode in modes %}
+                                        <option {% if panier.modeLivraison is not null and panier.modeLivraison.id == mode.id %} selected=""{% endif %} value="{{ mode.id }}">{{ mode.ville.nom ~ ' - ' ~ mode.libelle ~ ' - ' ~ mode.fraisLivraison|number_format(2,'.',' ') ~ 'DH'  }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="well well-ws-inc">
+                            <legend><i class="fa fa-list" aria-hidden="true"></i> Détails Commande</legend>
+                            <div class="table-responsive">
+                                <table id="table-items" class="table table-condensed">
+                                    <thead>
+                                        <tr>
+                                            <th>Référence</th>
+                                            <th>Titre</th>
+                                            <th class="text-center">Couleur</th>
+                                            <th class="text-center">Taille</th>
+                                            <th class="text-center">Prix unitaire</th>
+                                            <th class="text-center">Quantité</th>
+                                            <th class="text-center">Sous total</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% include 'AppBundle:front:inc_checkout_details.html.twig' with {'panier': panier} %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <button type="submit" id="valider" data-loading-text='Validation en cours <i class="fa fa-spinner fa-spin" aria-hidden="true"></i>' class="btn-ws">Valider ma commande</button>
+                    </div>
+                </div>
+
+            </form>
+        </div>
+    </section>
+
+{% endblock %}
+{% block javascript %}
+    <script type="text/javascript" src="{{ asset('front/js/checkout.js') }}"></script>
+{% endblock %}

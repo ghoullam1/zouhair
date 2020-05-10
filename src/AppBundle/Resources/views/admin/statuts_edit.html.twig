@@ -1,0 +1,74 @@
+{% extends "layout_admin.html.twig" %}
+{% set item = "commades" %}
+{% set sousItem = "statut" %}
+{% block title %}Statuts Commande : {{ statut.libelle }}{% endblock %}
+
+{% block stylesheet %}
+    <link rel="stylesheet" type="text/css" href="{{ asset('css/bootstrap-switch.css') }}" />
+{% endblock %}
+
+{% block breadcrumb %}
+    <li><a href="{{ path('app_admin_index') }}">Administration</a></li>
+    <li><a href="{{ path('app_admin_statuts') }}">Statuts Commande</a></li>
+    <li class="active">{{ statut.libelle }}</li>
+    {% endblock %}
+
+{% block contenu %}
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="well well-ws-inc">
+                <legend><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Modifier Statut Commande ({{ statut.libelle }})</legend>
+                {{ form_start(formStatut,{'attr':{'class':'form-horizontal','method':'POST','data-parsley-validate':''}}) }}
+                {{ form_errors(formStatut) }}
+
+                <div class="form-group">
+                    {{ form_label(formStatut.libelle, "Libellé : ", {'label_attr': {'class': 'col-sm-2 control-label'}}) }}
+                    <div class="col-sm-10">
+                        {{ form_widget(formStatut.libelle, {'attr': {'class': 'form-control'}}) }}
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    {{ form_label(formStatut.estPaye, "Est payé : ", {'label_attr': {'class': 'col-sm-2 control-label'}}) }}
+                    <div style="margin-top: 5px;" class="col-sm-10">
+                        {{ form_widget(formStatut.estPaye, {'attr': {'data-on-text': 'Oui','data-off-text': 'Non','class':'switch'}}) }}
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    {{ form_label(formStatut.estLivre, "Est livré : ", {'label_attr': {'class': 'col-sm-2 control-label'}}) }}
+                    <div style="margin-top: 5px;" class="col-sm-10">
+                        {{ form_widget(formStatut.estLivre, {'attr': {'data-on-text': 'Oui','data-off-text': 'Non','class':'switch'}}) }}
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    {{ form_label(formStatut.sendMail, "Envoyer un email : ", {'label_attr': {'class': 'col-sm-2 control-label'}}) }}
+                    <div style="margin-top: 5px;" class="col-sm-10">
+                        {{ form_widget(formStatut.sendMail, {'attr': {'data-on-text': 'Oui','data-off-text': 'Non','class':'switch'}}) }}
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    {{ form_label(formStatut.template, "Template : ", {'label_attr': {'class': 'col-sm-2 control-label'}}) }}
+                    <div class="col-sm-10">
+                        {{ form_widget(formStatut.template, {'attr': {'class': 'form-control'}}) }}
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <button class="btn btn-primary btn-sm pull-right" type="submit"><i class="fa fa-floppy-o" aria-hidden="true"></i> Enregistrer</button>
+                </div>
+                {{ form_rest(formStatut) }}
+                {{ form_end(formStatut) }}
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascript %}
+    <script type="text/javascript" src="{{ asset('js/bootstrap-switch.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/tinymce/tinymce.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/statuts.js') }}"></script>
+{% endblock %}

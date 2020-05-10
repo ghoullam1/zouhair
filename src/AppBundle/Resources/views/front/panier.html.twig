@@ -1,0 +1,25 @@
+<a href="{{ path('app_front_panier_details') }}">
+    <h5>Mon Panier <span>{{ panier.items|length }}</span> Produits <span>{{ panier.sousTotal|number_format(2, '.', ' ') }}DH</span></h5>
+    <i class="fa fa-shopping-cart"></i>
+</a>
+<div class="cart-hover">
+    <ul class="header-cart-pro">
+        {% if panier.items|length > 0 %}
+            {% for item in panier.items %}
+                <li>
+                    <div class="image"><a href="#"><img alt="cart item" src="{{ image('images/upload/' ~ item.image).resize(140,113) }}"></a></div>
+                    <div class="content fix"><a title="{{ item.titre }}" href="{{ path('app_front_produits_details',{'reference':item.reference}) }}">{{ item.reference }}</a><span class="price">Prix: {{ item.prix|number_format(2, '.', ' ') }} DH</span><span class="quantity">Quantité: {{ item.quantite }}</span></div>
+                    <i data-couleur="{{ item.couleur ? item.couleur.code : '' }}" data-taille="{{ item.taille ? item.taille.code : '' }}" data-reference="{{ item.reference }}" data-url="{{ path('app_front_panier_remove') }}" class="fa fa-trash delete delete-item"></i>
+                </li>
+            {% endfor %}
+        {% else %}
+            <h3 style="font-size: large;color: #dc3545;font-weight: bold;">Votre Panier d'achats est vide!</h3>
+        {% endif %}
+    </ul>
+    {% if panier.items|length > 0 %}
+        <div class="header-button-price">
+            <a href="{{ path('app_front_checkout') }}"><i class="fa fa-sign-out"></i><span>Commander</span></a>
+            <div class="total-price"><h3>Total : <span>{{ panier.sousTotal|number_format(2, '.', ' ') }} DH</span></h3></div>
+        </div>
+    {% endif %}
+</div>
